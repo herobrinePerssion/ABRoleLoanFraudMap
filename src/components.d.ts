@@ -11,6 +11,7 @@ declare module 'vue' {
     CommentList: typeof import('./components/CommentList.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElCard: typeof import('element-plus/es')['ElCard']
     ElCol: typeof import('element-plus/es')['ElCol']
     ElContainer: typeof import('element-plus/es')['ElContainer']
     ElForm: typeof import('element-plus/es')['ElForm']
@@ -24,5 +25,9 @@ declare module 'vue' {
     HelloWorld: typeof import('./components/HelloWorld.vue')['default']
     MapView: typeof import('./components/MapView.vue')['default']
     ReportForm: typeof import('./components/reportForm.vue')['default']
+    VictimList: typeof import('./components/VictimList.vue')['default']
+  }
+  export interface GlobalDirectives {
+    vInfiniteScroll: typeof import('element-plus/es')['ElInfiniteScroll']
   }
 }

@@ -25,7 +25,13 @@ export default defineConfig({
       dts: 'src/components.d.ts',
     }),
   ],
-
+   css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "@/styles/variables.scss" as *;`
+      }
+    }
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

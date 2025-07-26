@@ -5,7 +5,6 @@
  * @LastEditTime: 2025-07-26 18:14:12
  * @Description: 
 -->
-// 2️⃣ src/components/MapView.vue
 <template>
   <div>
     <el-alert title="AB贷公司地图分布（点击标记查看详情）" type="info" show-icon class="mb-2" />
