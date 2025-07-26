@@ -1,35 +1,55 @@
+// 2️⃣ src/components/MapView.vue
 <template>
-  <div ref="mapContainer" class="map-container"></div>
+  <div>
+    <el-alert title="AB贷公司地图分布（点击标记查看详情）" type="info" show-icon class="mb-2" />
+    <div id="mapContainer" class="map-container"></div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import mapboxgl from 'mapbox-gl'
+import { onMounted } from 'vue'
 import data from '../../data/fraud_list.json'
-
-const mapContainer = ref(null)
+import 'element-plus/theme-chalk/el-alert.css'
 
 onMounted(() => {
-  mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN'
-  const map = new mapboxgl.Map({
-    container: mapContainer.value as HTMLElement,
-    style: 'mapbox://styles/mapbox/streets-v11',
-    center: [104.1954, 35.8617],
-    zoom: 4
-  })
+  const script = document.createElement('script')
+  script.src = 'https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY'
+  script.onload = () => {
+    const map = new AMap.Map('mapContainer', {
+      zoom: 5,
+      center: [104.1954, 35.8617],
+    })
 
-  data.forEach(item => {
-    new mapboxgl.Marker()
-      .setLngLat([item.lng, item.lat])
-      .setPopup(new mapboxgl.Popup().setHTML(`<strong>${item.name}</strong><br>${item.city}<br>${item.description}`))
-      .addTo(map)
-  })
+    data.forEach((item) => {
+      const marker = new AMap.Marker({
+        position: [item.lng, item.lat],
+        title: item.name,
+      })
+
+      const info = new AMap.InfoWindow({
+        content: `<strong>${item.name}</strong><br>${item.city}<br>${item.description}`,
+        offset: new AMap.Pixel(0, -30),
+      })
+
+      marker.on('click', () => {
+        info.open(map, marker.getPosition())
+      })
+
+      map.add(marker)
+    })
+  }
+  document.head.appendChild(script)
 })
 </script>
 
 <style>
 .map-container {
   width: 100%;
-  height: 100vh;
+  height: 80vh;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.mb-2 {
+  margin-bottom: 16px;
 }
 </style>
