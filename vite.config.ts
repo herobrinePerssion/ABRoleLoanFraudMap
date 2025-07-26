@@ -1,3 +1,10 @@
+/*
+ * @Author: arron Zhu
+ * @Date: 2025-07-26 23:35:55
+ * @lastEditor: arron Zhu
+ * @LastEditTime: 2025-07-27 01:02:30
+ * @Description: 
+ */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
@@ -7,6 +14,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
+base: '/fraudMap/', // ⚠️ 必须加上仓库名（带前后斜杠）
   plugins: [
     vue(),
     AutoImport({
