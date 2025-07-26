@@ -1,3 +1,10 @@
+<!--
+ * @Author: arron Zhu
+ * @Date: 2025-07-26 17:32:24
+ * @lastEditor: arron Zhu
+ * @LastEditTime: 2025-07-26 18:14:12
+ * @Description: 
+-->
 // 2️⃣ src/components/MapView.vue
 <template>
   <div>
@@ -13,7 +20,7 @@ import 'element-plus/theme-chalk/el-alert.css'
 
 onMounted(() => {
   const script = document.createElement('script')
-  script.src = 'https://webapi.amap.com/maps?v=2.0&key=YOUR_AMAP_KEY'
+  script.src = 'https://webapi.amap.com/maps?v=2.0&key=7f06493bcc50ca65ec455558e170d017'
   script.onload = () => {
     const map = new AMap.Map('mapContainer', {
       zoom: 5,

@@ -8,12 +8,12 @@
 <template>
   <el-form :inline="true" :model="filters" class="filter-form">
     <el-form-item label="城市">
-      <el-select v-model="filters.city" placeholder="选择城市" clearable>
+      <el-select style="width:300px" v-model="filters.city" placeholder="选择城市" clearable>
         <el-option v-for="city in cityList" :key="city" :label="city" :value="city" />
       </el-select>
     </el-form-item>
     <el-form-item label="状态">
-      <el-select v-model="filters.status" placeholder="选择状态" clearable>
+      <el-select style="width:300px" v-model="filters.status" placeholder="选择状态" clearable>
         <el-option label="未立案" value="未立案" />
         <el-option label="立案中" value="立案中" />
         <el-option label="已判决" value="已判决" />
