@@ -1,2 +1,11 @@
 
-@use "element-plus/theme-chalk/src/common/var.scss" as *;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

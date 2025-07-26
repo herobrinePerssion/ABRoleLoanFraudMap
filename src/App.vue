@@ -5,16 +5,9 @@
  * @LastEditTime: 2025-07-26 23:58:14
  * @Description: 
 -->
-<!--
- * @Author: arron Zhu
- * @Date: 2025-07-26 17:31:45
- * @lastEditor: arron Zhu
- * @LastEditTime: 2025-07-26 18:19:51
- * @Description: 
--->
 <template>
-  <el-container>
-  <el-row :gutter="20" style="width: 100%; height: 100vh;">
+  <el-container class="el-container">
+  <el-row :gutter="20" style="width: 100%; height: 100%;">
     <el-col :span="6" :offset="0">
     <VictimList></VictimList>
     </el-col>
@@ -39,7 +32,6 @@ import VictimList from '@/components/VictimList.vue'
 </script>
 <style lang="scss" scoped>
 .el-container {
-  height: 100vh;
-  overflow: hidden;
+  overflow: hidden !important;
 }
 </style>

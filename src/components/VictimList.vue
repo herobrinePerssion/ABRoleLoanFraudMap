@@ -53,7 +53,9 @@ const handleClick = (victim: Victim) => {
   // 向外发射事件，定位到地图上
   window.dispatchEvent(new CustomEvent('map-locate', { detail: victim.location }))
 }
-
+const load = () => {
+  
+}
 onMounted(startScroll)
 onUnmounted(pauseScroll)
 </script>
