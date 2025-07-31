@@ -2,7 +2,7 @@
  * @Author: arron Zhu
  * @Date: 2025-07-26 23:35:55
  * @lastEditor: arron Zhu
- * @LastEditTime: 2025-07-27 01:09:10
+ * @LastEditTime: 2025-08-01 00:39:59
  * @Description: 
  */
 import { defineConfig } from 'vite'
@@ -14,7 +14,7 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
-base: '/ABRoleLoanFraudMap/', // 必须加仓库名
+base: '/', // 必须加仓库名
   plugins: [
     vue(),
     AutoImport({
