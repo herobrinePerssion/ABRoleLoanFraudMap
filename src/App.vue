@@ -7,9 +7,10 @@
 -->
 <template>
   <el-container class="el-container">
-  <el-row :gutter="20" style="width: 100%; height: 100%;">
+  <Header  />
+  <el-row :gutter="20" class="main-content">
     <el-col :span="6" :offset="0">
-    <VictimList></VictimList>
+    <VictimList class="victim-list"></VictimList>
     </el-col>
     <el-col :span="18" :offset="0">
       <el-header>
@@ -29,9 +30,19 @@
 import MapView from '@/components/MapView.vue'
 import FilterPanel from '@/components/FilterPanel.vue'
 import VictimList from '@/components/VictimList.vue'
+import Header from '@/components/Header.vue'
 </script>
 <style lang="scss" scoped>
 .el-container {
   overflow: hidden !important;
+  flex-direction: column;
+  .victim-list {
+    height: calc(100vh - 110px); // Adjust height to account for header
+    overflow-y: auto;
+  }
+  .main-content {
+    height: calc(100vh - 100px); // Adjust height to account for header
+    overflow: hidden;
+  }
 }
 </style>

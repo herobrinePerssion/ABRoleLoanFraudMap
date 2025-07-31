@@ -6,10 +6,9 @@
  * @Description: 
 -->
 <template>
-  <div>
-    <el-alert title="AB贷公司地图分布（点击标记查看详情）" type="info" show-icon class="mb-2" />
+  <el-card class="map-card" shadow="hover">
     <div id="mapContainer" class="map-container"></div>
-  </div>
+  </el-card>
 </template>
 
 <script setup lang="ts">
@@ -51,7 +50,7 @@ onMounted(() => {
 <style>
 .map-container {
   width: 100%;
-  height: 80vh;
+  height: calc(100vh - 220px); /* Adjust height to fit the header */
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
