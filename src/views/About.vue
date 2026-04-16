@@ -1,72 +1,90 @@
 <template>
-    <el-main>
-      <!-- 标题 -->
-      <el-page-header content="关于 AB 贷诈骗" />
+  <el-main class="about-page">
+    <el-page-header content="关于 AB 贷诈骗" />
 
-      <!-- 简介 -->
-      <el-card class="intro-card" shadow="hover">
-        <div class="intro-content">
-          <div class="text">
-            <h2>什么是 AB 贷？</h2>
-            <p>
-              AB 贷是一种常见的金融诈骗手法，诈骗分子通过伪装成贷款中介，以提高信用额度、代办军人贷、低息贷等名义引诱受害人申请多笔贷款。A 贷作为表面借款，B 贷作为隐性套现，最终受害人背上多笔债务，而诈骗分子卷款潜逃。
-            </p>
-          </div>
-          <img src="https://img1.imgtp.com/2023/06/01/VZubjTWa.png" alt="ab贷套路图" />
+    <el-card class="intro-card" shadow="hover">
+      <div class="intro-content">
+        <div class="text">
+          <h2>什么是 AB 贷诈骗？</h2>
+          <p>
+            AB 贷诈骗通常由“贷款方 A + 伪担保方 B”共同实施。诈骗分子先以“低息、秒批、黑户可贷”吸引用户，
+            再以“保证金、解冻金、刷流水、担保费”等理由层层收费，最终不放款或诱导受害人承担多笔高额债务。
+          </p>
+          <el-alert
+            type="warning"
+            :closable="false"
+            show-icon
+            title="关键识别点：正规金融机构不会在放款前要求私人账户转账。"
+          />
         </div>
-      </el-card>
+        <img src="https://img1.imgtp.com/2023/06/01/VZubjTWa.png" alt="ab贷套路图" />
+      </div>
+    </el-card>
 
-      <!-- 套路流程 -->
-      <el-card class="timeline-card" shadow="hover">
-        <h3>诈骗常见流程</h3>
-        <el-timeline>
-          <el-timeline-item timestamp="第一步" placement="top">
-            <el-icon><ChatLineRound /></el-icon>
-            通过社交平台、短视频、微信等方式发布“代办信用贷”“军人贷”等广告。
-          </el-timeline-item>
-          <el-timeline-item timestamp="第二步" placement="top">
-            <el-icon><UserFilled /></el-icon>
-            诈骗分子伪装成专业贷款中介或军官身份获取信任。
-          </el-timeline-item>
-          <el-timeline-item timestamp="第三步" placement="top">
-            <el-icon><DocumentChecked /></el-icon>
-            引导受害人提供征信信息、身份证照片等资料，远程办理贷款。
-          </el-timeline-item>
-          <el-timeline-item timestamp="第四步" placement="top">
-            <el-icon><Money /></el-icon>
-            引导申请 A 贷后，再通过 B 贷套现“还款”，造成假象，实际资金被转移。
-          </el-timeline-item>
-          <el-timeline-item timestamp="第五步" placement="top">
-            <el-icon><CircleClose /></el-icon>
-            贷款成功后中介失联，受害人独自承担全部债务。
-          </el-timeline-item>
-        </el-timeline>
-      </el-card>
+    <el-row :gutter="20" class="panel-row">
+      <el-col :xs="24" :md="14">
+        <el-card class="timeline-card" shadow="hover">
+          <h3>常见诈骗流程</h3>
+          <el-timeline>
+            <el-timeline-item timestamp="1" placement="top">
+              <el-icon><ChatLineRound /></el-icon>
+              在短视频/社交平台投放“高通过率贷款”广告。
+            </el-timeline-item>
+            <el-timeline-item timestamp="2" placement="top">
+              <el-icon><UserFilled /></el-icon>
+              伪装银行经理、军官或官方客服建立信任。
+            </el-timeline-item>
+            <el-timeline-item timestamp="3" placement="top">
+              <el-icon><DocumentChecked /></el-icon>
+              索要身份证、银行卡、征信与验证码等敏感信息。
+            </el-timeline-item>
+            <el-timeline-item timestamp="4" placement="top">
+              <el-icon><Money /></el-icon>
+              诱导先支付费用或继续办理 B 贷“覆盖前账”。
+            </el-timeline-item>
+            <el-timeline-item timestamp="5" placement="top">
+              <el-icon><CircleClose /></el-icon>
+              失联或继续施压转账，受害人背负真实债务。
+            </el-timeline-item>
+          </el-timeline>
+        </el-card>
+      </el-col>
 
-      <!-- 案例展示 -->
-      <el-row :gutter="20" class="case-list">
-        <el-col :span="12" v-for="(item, index) in cases" :key="index">
-          <el-card shadow="hover" class="case-card">
-            <h4>{{ item.title }}</h4>
-            <p>{{ item.description }}</p>
-            <el-tag type="danger" effect="dark">{{ item.region }}</el-tag>
-          </el-card>
-        </el-col>
-      </el-row>
+      <el-col :xs="24" :md="10">
+        <el-card class="checklist-card" shadow="hover">
+          <h3>防骗自检清单</h3>
+          <el-space direction="vertical" fill>
+            <el-tag type="danger">放款前收费 = 高危诈骗信号</el-tag>
+            <el-tag type="danger">要求屏幕共享/远程控制 = 高危</el-tag>
+            <el-tag type="warning">合同条款不完整或模糊 = 高风险</el-tag>
+            <el-tag type="warning">客服催促“立刻转账” = 高风险</el-tag>
+            <el-tag>所有沟通与转账记录请及时留存</el-tag>
+          </el-space>
+        </el-card>
+      </el-col>
+    </el-row>
 
-      <!-- 引用与参考资料 -->
-      <el-card class="reference-card" shadow="never">
-        <h3>参考资料</h3>
-        <ul>
-          <li><el-link href="https://www.chinacourt.org/article/detail/2024/02/id/7372912.shtml" target="_blank">《关于打击非法放贷的通告》</el-link></li>
-          <li><el-link href="https://finance.sina.com.cn/chanjing/b/2023-05-15/doc-imytqsvm1855086.shtml" target="_blank">新浪财经 - 多人被骗“军官贷”内幕曝光</el-link></li>
-          <li><el-link href="https://news.cctv.com/2023/03/21/ARTI4jfYLiT3HUG9E8k7WDFZ230321.shtml" target="_blank">央视新闻 - AB贷“空手套白狼”揭秘</el-link></li>
-        </ul>
-      </el-card>
-    </el-main>
+    <el-row :gutter="20" class="case-list">
+      <el-col :xs="24" :md="12" v-for="(item, index) in cases" :key="index">
+        <el-card shadow="hover" class="case-card">
+          <h4>{{ item.title }}</h4>
+          <p>{{ item.description }}</p>
+          <el-tag type="danger" effect="dark">{{ item.region }}</el-tag>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <el-card class="reference-card" shadow="never">
+      <h3>参考与科普</h3>
+      <ul>
+        <li><el-link href="https://www.chinacourt.org/article/detail/2024/02/id/7372912.shtml" target="_blank">《关于打击非法放贷的通告》</el-link></li>
+        <li><el-link href="https://finance.sina.com.cn/chanjing/b/2023-05-15/doc-imytqsvm1855086.shtml" target="_blank">新浪财经 - “军官贷”骗局曝光</el-link></li>
+        <li><el-link href="https://news.cctv.com/2023/03/21/ARTI4jfYLiT3HUG9E8k7WDFZ230321.shtml" target="_blank">央视新闻 - AB贷套路解析</el-link></li>
+      </ul>
+    </el-card>
+  </el-main>
 </template>
 <script setup lang="ts">
-import { ref } from 'vue'
 import {
   ChatLineRound,
   UserFilled,
@@ -91,38 +109,47 @@ const cases = ref([
 
 <style lang="scss" scoped>
 .about-page {
-  padding: 20px;
+  padding: 0 20px 20px;
 
   .intro-card {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 
     .intro-content {
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
+      gap: 16px;
 
       .text {
         flex: 1;
-        padding-right: 20px;
+        padding-right: 8px;
       }
 
       img {
-        width: 320px;
+        width: 300px;
         height: auto;
         border-radius: 8px;
       }
     }
   }
 
+  .panel-row {
+    margin-bottom: 20px;
+  }
+
   .timeline-card {
-    margin-bottom: 30px;
+    height: 100%;
+  }
+
+  .checklist-card {
+    height: 100%;
   }
 
   .case-list {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
 
     .case-card {
-      height: 180px;
+      min-height: 170px;
     }
   }
 
@@ -131,6 +158,21 @@ const cases = ref([
       padding-left: 20px;
       li {
         margin-bottom: 8px;
+      }
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .about-page {
+    padding: 0 12px 16px;
+
+    .intro-card .intro-content {
+      flex-direction: column;
+
+      img {
+        width: 100%;
+        max-width: 420px;
       }
     }
   }

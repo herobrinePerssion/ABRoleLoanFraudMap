@@ -3,7 +3,7 @@
  * @Date: 2025-07-26 17:40:57
  * @lastEditor: arron Zhu
  * @LastEditTime: 2025-07-26 17:41:00
- * @Description: 
+ * @Description:
 -->
 <template>
   <el-form :inline="true" :model="filters" class="filter-form">
@@ -27,8 +27,6 @@
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
-
 const filters = reactive({
   city: '',
   status: ''

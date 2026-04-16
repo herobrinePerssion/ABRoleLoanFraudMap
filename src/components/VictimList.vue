@@ -14,8 +14,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-
 interface Victim {
   name: string
   amount: number
@@ -71,7 +69,7 @@ const handleClick = (victim: Victim) => {
   window.dispatchEvent(new CustomEvent('map-locate', { detail: victim.location }))
 }
 const load = () => {
-  
+
 }
 onMounted(startScroll)
 onUnmounted(pauseScroll)

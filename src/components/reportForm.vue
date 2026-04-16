@@ -3,7 +3,7 @@
  * @Date: 2025-07-26 17:39:48
  * @lastEditor: arron Zhu
  * @LastEditTime: 2025-07-26 17:39:53
- * @Description: 
+ * @Description:
 -->
 <template>
   <el-form :model="form" label-width="80px">
@@ -20,20 +20,26 @@
       <el-input v-model="form.description" type="textarea" rows="4" placeholder="诈骗行为详情" />
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="submit">提交</el-button>
+      <el-button type="primary" :loading="submitting" :disabled="submitting" @click="submit">提交</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script setup lang="ts">
-import { reactive } from 'vue'
+import type { ReportFormData } from '@/types/report'
+import { createReportRecord, saveReportRecord } from '@/services/reportService'
 
-const form = reactive({
+const emit = defineEmits<{
+  (e: 'submitted', payload: { id: string }): void
+}>()
+
+const form = reactive<ReportFormData>({
   name: '',
   location: [],
   address: '',
   description: ''
 })
+const submitting = ref(false)
 
 const cityOptions = [
   { value: '广东省', label: '广东省', children: [{ value: '深圳市', label: '深圳市' }] },
@@ -41,7 +47,40 @@ const cityOptions = [
 ]
 
 function submit() {
-  console.log('提交举报表单', form)
-  // 你可以在此发送到后端或保存至 JSON 文件
+  if (submitting.value) {
+    return
+  }
+
+  const name = form.name.trim()
+  const address = form.address.trim()
+  const description = form.description.trim()
+
+  if (!name || !form.location.length || !address || !description) {
+    ElMessage.warning('请完善举报信息后再提交')
+    return
+  }
+
+  submitting.value = true
+  try {
+    const record = createReportRecord({
+      name,
+      location: form.location,
+      address,
+      description,
+    })
+
+    saveReportRecord(record)
+    ElMessage.success(`提交成功，编号：${record.id}`)
+    emit('submitted', { id: record.id })
+
+    form.name = ''
+    form.location = []
+    form.address = ''
+    form.description = ''
+  } catch {
+    ElMessage.error('提交失败，请稍后重试')
+  } finally {
+    submitting.value = false
+  }
 }
 </script>

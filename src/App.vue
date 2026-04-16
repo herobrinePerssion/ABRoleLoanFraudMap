@@ -3,12 +3,15 @@
  * @Date: 2025-07-26 23:35:55
  * @lastEditor: arron Zhu
  * @LastEditTime: 2025-07-26 23:58:14
- * @Description: 
+ * @Description:
 -->
 <template>
   <el-container class="el-container">
-  <Header  />
-  <router-view />
+    <Header />
+    <div class="page-content">
+      <router-view />
+    </div>
+    <FooterBar />
   </el-container>
 </template>
 
@@ -16,7 +19,11 @@
 </script>
 <style lang="scss" scoped>
 .el-container {
-  overflow: hidden !important;
+  min-height: 100vh;
   flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
 }
 </style>

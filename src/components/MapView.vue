@@ -3,7 +3,7 @@
  * @Date: 2025-07-26 17:32:24
  * @lastEditor: arron Zhu
  * @LastEditTime: 2025-07-26 18:14:12
- * @Description: 
+ * @Description:
 -->
 <template>
   <el-card class="map-card" shadow="hover">
@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
 import data from '../../data/fraud_list.json'
 import 'element-plus/theme-chalk/el-alert.css'
 
