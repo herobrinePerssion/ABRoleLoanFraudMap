@@ -44,6 +44,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         additionalData: `@use "@/styles/variables.scss" as *;`,
+        silenceDeprecations: ['legacy-js-api'],
       },
     },
   },
@@ -67,48 +68,28 @@ export default defineConfig({
     // 高级分块策略
     rollupOptions: {
       output: {
-        // 手动分块配置 - 将大文件按功能模块分离
-        manualChunks: {
-          // 核心依赖库 - Vue生态
-          'vendor-core': ['vue', 'vue-router'],
+        // 手动分块配置 - 使用 id 分组，避免直接声明 .vue 文件导致解析问题
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('element-plus') || id.includes('@element-plus')) {
+              return 'vendor-element'
+            }
+            if (id.includes('vue-router') || id.includes('/vue/')) {
+              return 'vendor-core'
+            }
+            return 'vendor'
+          }
 
-          // Element Plus UI库 - 单独分块以便缓存
-          'vendor-element': ['element-plus', '@element-plus/icons-vue'],
+          if (id.includes('/src/views/')) {
+            if (id.includes('/Report') || id.includes('/ReportSuccess')) return 'chunk-report'
+            if (id.includes('/Cases') || id.includes('/Detail')) return 'chunk-cases'
+            if (id.includes('/Feedback') || id.includes('/Profile') || id.includes('/Search')) return 'chunk-user'
+            if (id.includes('/Quiz') || id.includes('/Help') || id.includes('/Policy')) return 'chunk-education'
+          }
 
-          // 业务页面分组 - 举报流程
-          'chunk-report': ['src/views/Report.vue', 'src/views/ReportSuccess.vue'],
-
-          // 业务页面分组 - 案例相关
-          'chunk-cases': ['src/views/Cases.vue', 'src/views/Detail.vue'],
-
-          // 业务页面分组 - 用户交互
-          'chunk-user': [
-            'src/views/Feedback.vue',
-            'src/views/Profile.vue',
-            'src/views/Search.vue',
-          ],
-
-          // 业务页面分组 - 教育内容
-          'chunk-education': ['src/views/Quiz.vue', 'src/views/Help.vue', 'src/views/Policy.vue'],
-
-          // 业务服务层
-          'chunk-services': [
-            'src/services/apiClient.ts',
-            'src/services/mockApi.ts',
-            'src/services/reportService.ts',
-          ],
-
-          // 工具和常量
-          'chunk-utils': ['src/constants/report.ts', 'src/constants/cases.ts'],
-
-          // 公共组件库
-          'chunk-components': [
-            'src/components/EmptyState.vue',
-            'src/components/ErrorState.vue',
-            'src/components/SkeletonLoader.vue',
-            'src/components/LoadingSpinner.vue',
-            'src/components/FooterBar.vue',
-          ],
+          if (id.includes('/src/services/')) return 'chunk-services'
+          if (id.includes('/src/constants/')) return 'chunk-utils'
+          if (id.includes('/src/components/')) return 'chunk-components'
         },
 
         // 优化输出文件名 - 按类型分目录
@@ -129,13 +110,5 @@ export default defineConfig({
       },
     },
 
-    // 压缩配置
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true,
-        drop_debugger: true,
-      },
-    },
   },
 })
