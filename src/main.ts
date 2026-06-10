@@ -15,7 +15,7 @@ import { reportWebVitals, monitorPagePerformance } from '@/utils/performance'
 initMockApi()
 
 // 开启性能监测（生产环境）
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.PROD) {
   // 报告 Web Vitals 指标
   reportWebVitals((metrics) => {
     console.log('Performance Metrics:', metrics)
