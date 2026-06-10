@@ -7,7 +7,6 @@
  */
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import path from 'path'
 
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
@@ -51,7 +50,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': '/src',
     },
   },
 
@@ -97,7 +96,8 @@ export default defineConfig({
         entryFileNames: 'js/[name]-[hash].js',
         chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
-          const info = assetInfo.name.split('.')
+          const fileName = assetInfo.name ?? ''
+          const info = fileName.split('.')
           const ext = info[info.length - 1]
           if (/png|jpe?g|gif|tiff|bmp|ico/i.test(ext)) {
             return `images/[name]-[hash][extname]`
