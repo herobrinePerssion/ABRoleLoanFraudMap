@@ -44,8 +44,24 @@
             <el-descriptions class="record-desc" :column="1" border>
               <el-descriptions-item label="线索编号">{{ record.id }}</el-descriptions-item>
               <el-descriptions-item label="提交时间">{{ formatTime(record.createdAt) }}</el-descriptions-item>
-              <el-descriptions-item label="线索主体">{{ record.name }}</el-descriptions-item>
-              <el-descriptions-item label="地区">{{ record.location }}</el-descriptions-item>
+              <el-descriptions-item label="公司名称">{{ record.name }}</el-descriptions-item>
+              <el-descriptions-item label="所在地区">{{ record.location }}</el-descriptions-item>
+              <el-descriptions-item v-if="record.address" label="公司地址">{{ record.address }}</el-descriptions-item>
+              <el-descriptions-item v-if="record.mapPoint" label="地图坐标">
+                {{ record.mapPoint.lng.toFixed(6) }}, {{ record.mapPoint.lat.toFixed(6) }}
+              </el-descriptions-item>
+              <el-descriptions-item v-if="record.legalPersonName" label="法人/负责人">
+                {{ record.legalPersonName }}
+              </el-descriptions-item>
+              <el-descriptions-item v-if="record.contactPhone || record.legalPersonPhone" label="联系方式">
+                {{ [record.legalPersonPhone, record.contactPhone].filter(Boolean).join(' / ') }}
+              </el-descriptions-item>
+              <el-descriptions-item v-if="record.photoNames?.length" label="照片材料">
+                {{ record.photoNames.join('、') }}
+              </el-descriptions-item>
+              <el-descriptions-item v-if="record.description" label="线索描述">
+                {{ record.description }}
+              </el-descriptions-item>
               <el-descriptions-item label="当前状态">
                 <el-tag :type="statusTagType">
                   {{ record.status }}

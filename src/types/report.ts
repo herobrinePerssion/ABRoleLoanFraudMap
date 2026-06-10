@@ -12,6 +12,20 @@ export interface ReportRecord {
   location: string
   address: string
   description: string
+  companyAddress?: string
+  detailAddress?: string
+  floorRoom?: string
+  mapPoint?: {
+    lng: number
+    lat: number
+  }
+  mapAddress?: string
+  legalPersonName?: string
+  legalPersonId?: string
+  legalPersonPhone?: string
+  contactPhone?: string
+  businessClues?: string
+  photoNames?: string[]
   status: ReportStatus
   createdAt: string
   updates: ReportUpdate[]
@@ -22,4 +36,18 @@ export interface ReportFormData {
   location: string[]
   address: string
   description: string
+  companyAddress?: string
+  detailAddress?: string
+  floorRoom?: string
+  mapPoint?: {
+    lng: number
+    lat: number
+  } | null
+  mapAddress?: string
+  legalPersonName?: string
+  legalPersonId?: string
+  legalPersonPhone?: string
+  contactPhone?: string
+  businessClues?: string
+  photoNames?: string[]
 }

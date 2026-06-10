@@ -1,10 +1,3 @@
-<!--
- * @Author       : Arron Zhu
- * @Date         : 2026-04-16 10:36:43
- * @LastEditors  : arronzhu@qingcongai.com
- * @LastEditTime : 2026-04-16 10:40:22
- * @Description  :
--->
 <template>
   <el-main class="report-page">
     <el-page-header content="举报入口" />
@@ -13,7 +6,7 @@
       <el-col :xs="24" :md="16">
         <el-card shadow="hover">
           <template #header>
-            <div class="card-title">在线举报信息</div>
+            <div class="card-title">非法中介举报信息</div>
           </template>
           <ReportForm @submitted="handleSubmitted" />
         </el-card>
@@ -25,17 +18,17 @@
             <div class="card-title">提交前准备</div>
           </template>
           <ul>
-            <li>聊天记录截图（含时间）</li>
-            <li>转账凭证与收款账户信息</li>
-            <li>合同、链接、二维码等证据</li>
-            <li>对方联系电话、社交账号</li>
+            <li>公司名称、所在城市、详细地址、楼层门牌号</li>
+            <li>公司门头、办公现场、合同、收据、聊天记录截图</li>
+            <li>法人、负责人、业务员姓名与联系方式</li>
+            <li>收款账户、二维码、网站链接、社交账号等线索</li>
           </ul>
           <el-divider />
           <el-alert
             type="info"
             :closable="false"
             show-icon
-            title="请勿上传银行卡密码、短信验证码等高敏信息。"
+            title="请勿提交银行卡密码、支付密码、短信验证码等高敏信息。"
           />
         </el-card>
 
@@ -46,7 +39,7 @@
           <el-input v-model="lookupId" placeholder="请输入编号，如 AB-20260416-1234" clearable />
           <el-button type="primary" class="lookup-btn" @click="goLookup">查询进度</el-button>
           <el-button class="lookup-btn" @click="goHelp">查看帮助中心</el-button>
-          <el-button class="lookup-btn" @click="goPolicy">隐私与法律声明</el-button>
+          <el-button class="lookup-btn" @click="goPolicy">隐私与法律说明</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -56,8 +49,10 @@
 <script setup lang="ts">
 import ReportForm from '@/components/reportForm.vue'
 import { normalizeReportId } from '@/services/reportService'
+
 const router = useRouter()
 const lookupId = ref('')
+
 function handleSubmitted(payload: { id: string }) {
   router.push({ path: '/report/success', query: { id: payload.id } })
 }
@@ -101,6 +96,7 @@ function goPolicy() {
   li {
     margin-bottom: 8px;
     color: #606266;
+    line-height: 1.6;
   }
 }
 
