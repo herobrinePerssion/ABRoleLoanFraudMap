@@ -73,8 +73,57 @@
         <el-form-item>
           <el-button @click="resetFilters">重置筛选</el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="openCreateDialog">新增案例</el-button>
+        </el-form-item>
       </el-form>
     </el-card>
+
+    <el-dialog
+      v-model="dialogVisible"
+      :title="editingId ? '编辑案例' : '新增案例'"
+      width="620px"
+      destroy-on-close
+    >
+      <el-form ref="caseFormRef" :model="caseForm" :rules="caseRules" label-width="96px">
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="caseForm.title" maxlength="60" show-word-limit />
+        </el-form-item>
+        <el-form-item label="城市" prop="city">
+          <el-input v-model="caseForm.city" placeholder="如：上海" />
+        </el-form-item>
+        <el-form-item label="地区" prop="region">
+          <el-input v-model="caseForm.region" placeholder="如：华东" />
+        </el-form-item>
+        <el-form-item label="诈骗类型" prop="scamType">
+          <el-input v-model="caseForm.scamType" placeholder="如：贷款诈骗" />
+        </el-form-item>
+        <el-form-item label="风险等级" prop="riskLevel">
+          <el-select v-model="caseForm.riskLevel" style="width: 100%">
+            <el-option label="高" value="高" />
+            <el-option label="中" value="中" />
+            <el-option label="低" value="低" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="处理状态" prop="progress">
+          <el-select v-model="caseForm.progress" style="width: 100%">
+            <el-option label="待核验" value="待核验" />
+            <el-option label="立案中" value="立案中" />
+            <el-option label="已判决" value="已判决" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="损失金额" prop="amountLoss">
+          <el-input-number v-model="caseForm.amountLoss" :min="0" :step="1000" style="width: 100%" />
+        </el-form-item>
+        <el-form-item label="摘要" prop="summary">
+          <el-input v-model="caseForm.summary" type="textarea" :rows="3" maxlength="200" show-word-limit />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" :loading="saving" @click="submitCaseForm">保存</el-button>
+      </template>
+    </el-dialog>
 
     <el-row :gutter="16" class="list-row" v-if="pagedCases.length">
       <el-col :xs="24" :md="12" v-for="item in pagedCases" :key="item.id">
@@ -105,6 +154,8 @@
             <div class="btns">
               <el-button link type="primary" @click="goDetail(item.id)">查看详情</el-button>
               <el-button link @click="goReport">我要举报</el-button>
+              <el-button v-if="isUserCase(item.id)" link type="warning" @click="openEditDialog(item)">编辑</el-button>
+              <el-button v-if="isUserCase(item.id)" link type="danger" @click="removeCase(item.id)">删除</el-button>
             </div>
           </div>
         </el-card>
@@ -134,11 +185,37 @@
 </template>
 
 <script setup lang="ts">
-import { FRAUD_CASES } from '@/constants/cases'
+import { ElMessage, ElMessageBox, type FormInstance } from 'element-plus'
+import { caseApi } from '@/services/mockApi'
 import type { FraudCase } from '@/types/case'
 
 const router = useRouter()
 const route = useRoute()
+const allCases = ref<FraudCase[]>([])
+
+const dialogVisible = ref(false)
+const editingId = ref('')
+const saving = ref(false)
+const caseFormRef = ref<FormInstance>()
+
+const caseForm = reactive({
+  title: '',
+  city: '',
+  region: '',
+  scamType: '',
+  riskLevel: '中' as FraudCase['riskLevel'],
+  progress: '待核验' as FraudCase['progress'],
+  amountLoss: 0,
+  summary: '',
+})
+
+const caseRules = {
+  title: [{ required: true, message: '请输入标题', trigger: 'blur' }],
+  city: [{ required: true, message: '请输入城市', trigger: 'blur' }],
+  region: [{ required: true, message: '请输入地区', trigger: 'blur' }],
+  scamType: [{ required: true, message: '请输入诈骗类型', trigger: 'blur' }],
+  summary: [{ required: true, message: '请输入摘要', trigger: 'blur' }],
+}
 
 const filters = reactive({
   keyword: '',
@@ -154,13 +231,13 @@ const pagination = reactive({
   pageSize: 4,
 })
 
-const regionOptions = computed(() => [...new Set(FRAUD_CASES.map(item => item.region))])
-const scamTypeOptions = computed(() => [...new Set(FRAUD_CASES.map(item => item.scamType))])
+const regionOptions = computed(() => [...new Set(allCases.value.map(item => item.region))])
+const scamTypeOptions = computed(() => [...new Set(allCases.value.map(item => item.scamType))])
 
 const filteredCases = computed(() => {
   const keyword = filters.keyword.trim().toLowerCase()
 
-  const base = FRAUD_CASES.filter((item) => {
+  const base = allCases.value.filter((item) => {
     const keywordMatched = !keyword
       || item.title.toLowerCase().includes(keyword)
       || item.summary.toLowerCase().includes(keyword)
@@ -269,6 +346,85 @@ function onPageChange(page: number) {
   pagination.page = page
 }
 
+function resetCaseForm() {
+  caseForm.title = ''
+  caseForm.city = ''
+  caseForm.region = ''
+  caseForm.scamType = ''
+  caseForm.riskLevel = '中'
+  caseForm.progress = '待核验'
+  caseForm.amountLoss = 0
+  caseForm.summary = ''
+}
+
+async function loadCases() {
+  const { items } = await caseApi.getCases({ page: 1, pageSize: 1000, sortBy: 'updated-desc' })
+  allCases.value = items
+}
+
+function isUserCase(id: string) {
+  return id.startsWith('user-') && caseApi.canManageCase(id)
+}
+
+function openCreateDialog() {
+  editingId.value = ''
+  resetCaseForm()
+  dialogVisible.value = true
+}
+
+function openEditDialog(item: FraudCase) {
+  if (!isUserCase(item.id)) {
+    ElMessage.warning('仅创建该案例的浏览器可编辑')
+    return
+  }
+  editingId.value = item.id
+  caseForm.title = item.title
+  caseForm.city = item.city
+  caseForm.region = item.region
+  caseForm.scamType = item.scamType
+  caseForm.riskLevel = item.riskLevel
+  caseForm.progress = item.progress
+  caseForm.amountLoss = item.amountLoss
+  caseForm.summary = item.summary
+  dialogVisible.value = true
+}
+
+async function submitCaseForm() {
+  if (!caseFormRef.value) return
+  await caseFormRef.value.validate(async (valid) => {
+    if (!valid) return
+    saving.value = true
+    try {
+      if (editingId.value) {
+        await caseApi.updateCase(editingId.value, { ...caseForm })
+        ElMessage.success('案例已更新')
+      } else {
+        await caseApi.createCase({ ...caseForm })
+        ElMessage.success('案例已新增')
+      }
+      dialogVisible.value = false
+      await loadCases()
+    } catch (error: any) {
+      ElMessage.error(error?.message || '保存失败')
+    } finally {
+      saving.value = false
+    }
+  })
+}
+
+async function removeCase(id: string) {
+  try {
+    await ElMessageBox.confirm('确认删除该用户录入案例吗？', '提示', {
+      type: 'warning',
+    })
+    await caseApi.deleteCase(id)
+    ElMessage.success('删除成功')
+    await loadCases()
+  } catch {
+    // 用户取消
+  }
+}
+
 function goDetail(id: FraudCase['id']) {
   router.push({
     path: `/cases/${id}`,
@@ -279,6 +435,10 @@ function goDetail(id: FraudCase['id']) {
 function goReport() {
   router.push('/report')
 }
+
+onMounted(() => {
+  loadCases()
+})
 </script>
 
 <style lang="scss" scoped>

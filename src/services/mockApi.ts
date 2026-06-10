@@ -8,6 +8,64 @@ import { ReportRecord, ReportStatus } from '@/types/report';
 import { FraudCase } from '@/types/case';
 import { FRAUD_CASES } from '@/constants/cases';
 
+const USER_CASES_KEY = 'user_cases';
+const USER_CASE_OWNER_KEY = 'user_case_owners';
+const LOCAL_CLIENT_ID_KEY = 'local_client_id';
+
+type CaseUpsertInput = Pick<
+  FraudCase,
+  'title' | 'city' | 'region' | 'scamType' | 'riskLevel' | 'progress' | 'amountLoss' | 'summary'
+> & {
+  pattern?: string[];
+  warningSignals?: string[];
+  suggestions?: string[];
+};
+
+function getUserCases(): FraudCase[] {
+  return JSON.parse(localStorage.getItem(USER_CASES_KEY) || '[]');
+}
+
+function getLocalClientId(): string {
+  const existing = localStorage.getItem(LOCAL_CLIENT_ID_KEY);
+  if (existing) return existing;
+  const next = `client-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  localStorage.setItem(LOCAL_CLIENT_ID_KEY, next);
+  return next;
+}
+
+function getCaseOwnerMap(): Record<string, string> {
+  return JSON.parse(localStorage.getItem(USER_CASE_OWNER_KEY) || '{}');
+}
+
+function saveCaseOwnerMap(map: Record<string, string>) {
+  localStorage.setItem(USER_CASE_OWNER_KEY, JSON.stringify(map));
+}
+
+function canManageUserCase(id: string): boolean {
+  const ownerMap = getCaseOwnerMap();
+  const clientId = getLocalClientId();
+  const ownerId = ownerMap[id];
+
+  if (!ownerId) {
+    const exists = getUserCases().some((c) => c.id === id);
+    if (!exists) return false;
+    // 兼容历史数据：首次访问时把无 owner 的用户案例归属当前浏览器
+    ownerMap[id] = clientId;
+    saveCaseOwnerMap(ownerMap);
+    return true;
+  }
+
+  return ownerId === clientId;
+}
+
+function saveUserCases(cases: FraudCase[]) {
+  localStorage.setItem(USER_CASES_KEY, JSON.stringify(cases));
+}
+
+function getAllCases(): FraudCase[] {
+  return [...getUserCases(), ...FRAUD_CASES];
+}
+
 /**
  * 初始化 Mock API 拦截器
  */
@@ -55,7 +113,7 @@ export const caseApi = {
     pageSize: number;
   }> {
     return apiClient.get('/cases', { cache: true, cacheTTL: 60000 }).then(() => {
-      let items = [...FRAUD_CASES];
+      let items = getAllCases();
 
       // 应用过滤
       if (filter?.keyword) {
@@ -121,7 +179,7 @@ export const caseApi = {
    */
   async getCaseById(id: string): Promise<FraudCase> {
     return apiClient.get(`/cases/${id}`, { cache: true, cacheTTL: 120000 }).then(() => {
-      const caseData = FRAUD_CASES.find((c) => c.id === id);
+      const caseData = getAllCases().find((c) => c.id === id);
       if (!caseData) {
         const error: ApiError = {
           code: 404,
@@ -139,7 +197,7 @@ export const caseApi = {
   async searchCases(query: string): Promise<FraudCase[]> {
     return apiClient.get('/cases/search', { cache: true, cacheTTL: 30000 }).then(() => {
       const q = query.toLowerCase();
-      return FRAUD_CASES.filter(
+      return getAllCases().filter(
         (c) =>
           c.title.toLowerCase().includes(q) ||
           c.summary.toLowerCase().includes(q) ||
@@ -154,13 +212,125 @@ export const caseApi = {
    */
   async getRelatedCases(caseId: string, limit: number = 4): Promise<FraudCase[]> {
     return apiClient.get(`/cases/${caseId}/related`, { cache: true, cacheTTL: 60000 }).then(() => {
-      const currentCase = FRAUD_CASES.find((c) => c.id === caseId);
+      const allCases = getAllCases();
+      const currentCase = allCases.find((c) => c.id === caseId);
       if (!currentCase) return [];
 
-      return FRAUD_CASES.filter(
+      return allCases.filter(
         (c) => c.id !== caseId && c.scamType === currentCase.scamType
       ).slice(0, limit);
     });
+  },
+
+  /**
+   * 新增案例（用户录入）
+   */
+  async createCase(data: CaseUpsertInput): Promise<FraudCase> {
+    return apiClient.post('/cases', data).then(() => {
+      const now = new Date().toISOString();
+      const userCase: FraudCase = {
+        id: `user-${Date.now()}`,
+        title: data.title,
+        city: data.city,
+        region: data.region,
+        scamType: data.scamType,
+        riskLevel: data.riskLevel,
+        progress: data.progress,
+        amountLoss: data.amountLoss,
+        publishedAt: now,
+        updatedAt: now,
+        summary: data.summary,
+        pattern: data.pattern?.length ? data.pattern : ['用户上报'],
+        warningSignals: data.warningSignals?.length
+          ? data.warningSignals
+          : ['信息待补充'],
+        suggestions: data.suggestions?.length
+          ? data.suggestions
+          : ['谨慎核验来源', '通过官方渠道咨询'],
+        timeline: [
+          {
+            time: now,
+            event: '用户创建案例',
+          },
+        ],
+        sourceName: '用户录入',
+        sourceUrl: '',
+        credibility: '中',
+      };
+
+      const userCases = getUserCases();
+      userCases.unshift(userCase);
+      saveUserCases(userCases);
+
+      const ownerMap = getCaseOwnerMap();
+      ownerMap[userCase.id] = getLocalClientId();
+      saveCaseOwnerMap(ownerMap);
+
+      return userCase;
+    });
+  },
+
+  /**
+   * 更新案例（仅允许更新用户录入案例）
+   */
+  async updateCase(id: string, patch: Partial<CaseUpsertInput>): Promise<FraudCase> {
+    return apiClient.put(`/cases/${id}`, patch).then(() => {
+      const userCases = getUserCases();
+      const index = userCases.findIndex((c) => c.id === id);
+
+      if (index === -1) {
+        throw {
+          code: 404,
+          message: 'Only user-created case can be updated',
+        } as ApiError;
+      }
+
+      if (!canManageUserCase(id)) {
+        throw {
+          code: 403,
+          message: 'No permission to edit this case',
+        } as ApiError;
+      }
+
+      const next: FraudCase = {
+        ...userCases[index],
+        ...patch,
+        updatedAt: new Date().toISOString(),
+      };
+
+      userCases[index] = next;
+      saveUserCases(userCases);
+      return next;
+    });
+  },
+
+  /**
+   * 删除案例（仅允许删除用户录入案例）
+   */
+  async deleteCase(id: string): Promise<void> {
+    return apiClient.delete(`/cases/${id}`).then(() => {
+      if (!canManageUserCase(id)) {
+        throw {
+          code: 403,
+          message: 'No permission to delete this case',
+        } as ApiError;
+      }
+
+      const userCases = getUserCases();
+      const next = userCases.filter((c) => c.id !== id);
+      saveUserCases(next);
+
+      const ownerMap = getCaseOwnerMap();
+      delete ownerMap[id];
+      saveCaseOwnerMap(ownerMap);
+    });
+  },
+
+  /**
+   * 是否具备当前浏览器的管理权限（编辑/删除）
+   */
+  canManageCase(id: string): boolean {
+    return canManageUserCase(id);
   },
 };
 
@@ -322,7 +492,7 @@ export const searchApi = {
 
       // 搜索案例
       if (!types || types.includes('cases')) {
-        results.cases = FRAUD_CASES.filter(
+        results.cases = getAllCases().filter(
           (c) =>
             c.title.toLowerCase().includes(q) ||
             c.summary.toLowerCase().includes(q)
@@ -358,19 +528,20 @@ export const statsApi = {
   }> {
     return apiClient.get('/stats', { cache: true, cacheTTL: 300000 }).then(() => {
       const reports = JSON.parse(localStorage.getItem('reports') || '[]');
+      const allCases = getAllCases();
 
       const regionDistribution: Record<string, number> = {};
       const scamTypeDistribution: Record<string, number> = {};
       let totalLoss = 0;
 
-      FRAUD_CASES.forEach((c) => {
+      allCases.forEach((c) => {
         regionDistribution[c.region] = (regionDistribution[c.region] || 0) + 1;
         scamTypeDistribution[c.scamType] = (scamTypeDistribution[c.scamType] || 0) + 1;
         totalLoss += c.amountLoss || 0;
       });
 
       return {
-        totalCases: FRAUD_CASES.length,
+        totalCases: allCases.length,
         totalReports: reports.length,
         totalLoss,
         regionDistribution,
