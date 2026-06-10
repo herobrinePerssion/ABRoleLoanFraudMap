@@ -430,6 +430,7 @@ const formatTime = (time: string) => {
     .search-filter {
       :deep(.el-radio-group) {
         gap: 10px;
+        flex-wrap: wrap;
       }
     }
   }
@@ -455,8 +456,23 @@ const formatTime = (time: string) => {
     .result-item {
       padding: 15px;
 
+      .item-header {
+        align-items: flex-start;
+        flex-wrap: wrap;
+
+        h4 {
+          min-width: 0;
+          overflow-wrap: anywhere;
+        }
+      }
+
       .item-footer {
         gap: 10px;
+
+        span {
+          white-space: normal;
+          overflow-wrap: anywhere;
+        }
       }
     }
   }

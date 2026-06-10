@@ -560,4 +560,101 @@ onMounted(() => {
     justify-content: center;
   }
 }
+
+@media (max-width: 768px) {
+  .kpi-row {
+    :deep(.el-col) {
+      margin-bottom: 12px;
+    }
+  }
+
+  .filter-card {
+    :deep(.el-card__body) {
+      padding: 14px;
+    }
+  }
+
+  .filters {
+    display: block;
+    margin-bottom: 0;
+
+    :deep(.el-form-item) {
+      margin-bottom: 12px;
+      width: 100%;
+    }
+
+    :deep(.el-form-item__content) {
+      width: 100%;
+    }
+
+    :deep(.el-input),
+    :deep(.el-select) {
+      width: 100% !important;
+    }
+
+    :deep(.el-button) {
+      width: 100%;
+    }
+  }
+
+  :deep(.el-dialog__body) {
+    padding: 16px;
+  }
+
+  :deep(.el-dialog__footer) {
+    display: flex;
+    gap: 10px;
+
+    .el-button {
+      flex: 1;
+    }
+  }
+
+  :deep(.el-form-item) {
+    display: block;
+  }
+
+  :deep(.el-form-item__label) {
+    display: block;
+    width: 100% !important;
+    margin-bottom: 6px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  .case-card {
+    .title-row {
+      align-items: flex-start;
+      flex-wrap: wrap;
+
+      h3 {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .footer-row {
+      align-items: stretch;
+
+      .loss,
+      .btns {
+        width: 100%;
+      }
+
+      .btns {
+        flex-wrap: wrap;
+
+        :deep(.el-button) {
+          flex: 1 1 calc(50% - 6px);
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .pager {
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+}
 </style>

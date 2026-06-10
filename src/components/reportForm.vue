@@ -84,3 +84,28 @@ function submit() {
   }
 }
 </script>
+
+<style scoped>
+@media (max-width: 768px) {
+  :deep(.el-form) {
+    --el-form-label-width: 0;
+  }
+
+  :deep(.el-form-item) {
+    display: block;
+  }
+
+  :deep(.el-form-item__label) {
+    display: block;
+    width: 100% !important;
+    margin-bottom: 6px;
+    justify-content: flex-start;
+    text-align: left;
+  }
+
+  :deep(.el-cascader),
+  :deep(.el-button) {
+    width: 100%;
+  }
+}
+</style>

@@ -44,7 +44,7 @@ function handleSelect(key: string) {
 
 <style lang="scss" scoped>
 .header-nav {
- width: 100%;
+  width: 100%;
   height: 60px;
   display: flex;
   align-items: center;
@@ -66,6 +66,7 @@ function handleSelect(key: string) {
 
 .nav-menu {
   flex: 1;
+  min-width: 0;
   justify-content: flex-end;
   background: transparent;
   border: none;
@@ -83,18 +84,42 @@ function handleSelect(key: string) {
 
 @media (max-width: 768px) {
   .header-nav {
-    padding: 0 15px;
-    gap: 15px;
+    height: auto !important;
+    min-height: 60px;
+    padding: 8px 12px 0;
+    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 12px;
   }
 
   .logo {
     font-size: 16px;
+    line-height: 1.4;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .nav-menu {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    justify-content: flex-start;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    :deep(.el-menu) {
+      flex-wrap: nowrap;
+    }
+
     :deep(.el-menu-item) {
+      height: 44px;
       font-size: 14px;
       padding: 0 10px !important;
+      flex-shrink: 0;
     }
   }
 }

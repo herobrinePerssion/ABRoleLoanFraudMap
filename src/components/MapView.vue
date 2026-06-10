@@ -50,10 +50,22 @@ onMounted(() => {
 .map-container {
   width: 100%;
   height: calc(100vh - 220px); /* Adjust height to fit the header */
+  min-height: 360px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 .mb-2 {
   margin-bottom: 16px;
+}
+
+@media (max-width: 768px) {
+  .map-card .el-card__body {
+    padding: 12px;
+  }
+
+  .map-container {
+    height: 420px;
+    min-height: 320px;
+  }
 }
 </style>

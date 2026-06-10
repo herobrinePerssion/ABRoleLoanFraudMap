@@ -579,14 +579,73 @@ loadFeedbacks();
   .content-container {
     padding: 20px;
 
+    :deep(.el-tabs__nav-wrap) {
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
     :deep(.el-tabs__item) {
       font-size: 14px;
+      padding: 0 12px;
     }
   }
 
   .filter-bar {
     :deep(.el-select) {
       width: 100%;
+    }
+  }
+
+  .report-list,
+  .feedback-list {
+    .report-card,
+    .feedback-card {
+      padding: 15px;
+
+      .card-header {
+        flex-direction: column;
+        gap: 10px;
+
+        h4 {
+          overflow-wrap: anywhere;
+        }
+      }
+
+      .card-footer {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+
+        :deep(.el-button) {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+    }
+  }
+
+  .security-settings {
+    max-width: none;
+
+    :deep(.el-form-item) {
+      display: block;
+    }
+
+    :deep(.el-form-item__label) {
+      display: block;
+      width: 100% !important;
+      margin-bottom: 8px;
+      justify-content: flex-start;
+      text-align: left;
+    }
+
+    :deep(.setting-help) {
+      display: block;
+      margin: 8px 0 0 !important;
     }
   }
 }

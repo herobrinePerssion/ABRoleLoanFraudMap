@@ -614,6 +614,15 @@ loadMyFeedbacks();
     padding: 20px;
 
     :deep(.el-tabs__nav-wrap) {
+      overflow-x: auto;
+      scrollbar-width: none;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+
+    :deep(.el-tabs__nav-wrap) {
       .el-tabs__item {
         font-size: 14px;
         padding: 10px 16px;
@@ -627,6 +636,59 @@ loadMyFeedbacks();
 
       :deep(.el-select) {
         width: 100%;
+      }
+    }
+  }
+
+  .form-section {
+    .feedback-form {
+      :deep(.el-form-item) {
+        display: block;
+      }
+
+      :deep(.el-form-item__label) {
+        display: block;
+        width: 100% !important;
+        margin-bottom: 6px;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
+      :deep(.el-radio-group) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      :deep(.el-select),
+      :deep(.el-button) {
+        width: 100%;
+      }
+
+      :deep(.el-button + .el-button) {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .history-section {
+    .feedback-list {
+      .feedback-card {
+        padding: 15px;
+
+        .card-header,
+        .title-section {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 10px;
+        }
+
+        .time,
+        h4 {
+          white-space: normal;
+          overflow-wrap: anywhere;
+        }
       }
     }
   }

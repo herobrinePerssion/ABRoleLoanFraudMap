@@ -118,4 +118,25 @@ function goPolicy() {
     padding: 0 12px 16px;
   }
 }
+
+@media (max-width: 768px) {
+  .report-layout {
+    :deep(.el-col) {
+      margin-bottom: 14px;
+    }
+  }
+
+  :deep(.el-card__header),
+  :deep(.el-card__body) {
+    padding: 14px;
+  }
+
+  .lookup-card {
+    margin-top: 0;
+
+    .lookup-btn {
+      margin-left: 0;
+    }
+  }
+}
 </style>

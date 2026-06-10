@@ -138,6 +138,7 @@
                   "
                   :stroke-width="8"
                   color="#f56c6c"
+                  :format="formatProgress"
                 />
               </div>
             </div>
@@ -272,6 +273,10 @@ const formatAmount = (amount: number) => {
     return `¥${(amount / 10000).toFixed(1)}万`;
   }
   return `¥${amount}`;
+};
+
+const formatProgress = (percentage: number) => {
+  return `${percentage.toFixed(1)}%`;
 };
 
 const getRiskTagType = (level: string): any => {
@@ -487,6 +492,8 @@ loadStats();
   }
 
   :deep(.el-table) {
+    width: 100%;
+
     .el-table__body tr:hover > td {
       background-color: #f9f9f9 !important;
     }
@@ -537,6 +544,7 @@ loadStats();
   .kpi-card {
     flex-direction: column;
     text-align: center;
+    margin-bottom: 12px;
   }
 
   .region-item {
@@ -560,6 +568,40 @@ loadStats();
           }
         }
       }
+    }
+  }
+
+  .charts-section {
+    margin-bottom: 20px;
+
+    .chart-card {
+      margin-bottom: 16px;
+
+      :deep(.el-card__header) {
+        padding: 16px;
+
+        .card-header {
+          align-items: flex-start;
+          flex-direction: column;
+          gap: 4px;
+        }
+      }
+
+      :deep(.el-card__body) {
+        padding: 16px;
+      }
+    }
+  }
+
+  .common-phrases-section {
+    overflow-x: auto;
+
+    :deep(.el-card__body) {
+      padding: 12px;
+    }
+
+    :deep(.el-table) {
+      min-width: 520px;
     }
   }
 }

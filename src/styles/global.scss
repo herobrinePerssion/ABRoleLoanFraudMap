@@ -1,0 +1,72 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+img,
+canvas,
+svg,
+video {
+  max-width: 100%;
+}
+
+.el-container,
+.el-main {
+  min-width: 0;
+}
+
+.el-card,
+.el-form,
+.el-tabs,
+.el-table {
+  min-width: 0;
+}
+
+.el-card__body {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .el-message-box,
+  .el-dialog {
+    width: calc(100vw - 24px) !important;
+    max-width: calc(100vw - 24px);
+  }
+
+  .el-form--inline .el-form-item {
+    display: flex;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .el-form--inline .el-form-item__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .el-form-item__label {
+    overflow-wrap: anywhere;
+  }
+
+  .el-button + .el-button {
+    margin-left: 0;
+  }
+}

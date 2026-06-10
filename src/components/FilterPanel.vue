@@ -49,4 +49,29 @@ function resetFilter() {
 .filter-form {
   margin-bottom: 16px;
 }
+
+@media (max-width: 768px) {
+  .filter-form {
+    display: block;
+  }
+
+  .filter-form :deep(.el-form-item) {
+    display: flex;
+    margin-right: 0;
+    width: 100%;
+  }
+
+  .filter-form :deep(.el-form-item__content) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .filter-form :deep(.el-select) {
+    width: 100% !important;
+  }
+
+  .filter-form :deep(.el-button) {
+    flex: 1;
+  }
+}
 </style>

@@ -338,4 +338,70 @@ function goCaseDetail(id: string) {
     padding: 0 12px 16px;
   }
 }
+
+@media (max-width: 768px) {
+  .hero {
+    :deep(.el-card__header),
+    :deep(.el-card__body) {
+      padding: 14px;
+    }
+
+    .hero-title {
+      font-size: 18px;
+      line-height: 1.4;
+      overflow-wrap: anywhere;
+    }
+
+    .hero-actions {
+      :deep(.el-button) {
+        width: 100%;
+      }
+    }
+  }
+
+  .main-content {
+    min-height: auto;
+  }
+
+  .map-panel {
+    min-height: auto;
+
+    :deep(.el-card__body) {
+      padding: 12px;
+    }
+  }
+
+  .featured-item {
+    .featured-top {
+      flex-wrap: wrap;
+
+      h3 {
+        min-width: 0;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+
+  .section-head {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cta-panel {
+    :deep(.el-card__body) {
+      padding: 14px;
+    }
+
+    .cta-title {
+      font-size: 18px;
+      line-height: 1.4;
+    }
+
+    :deep(.el-space),
+    :deep(.el-space__item),
+    :deep(.el-button) {
+      width: 100%;
+    }
+  }
+}
 </style>
