@@ -1,10 +1,10 @@
 <template>
   <el-header height="60px" class="header-nav">
-    <div class="logo">AB贷全国诈骗地图</div>
+    <div class="logo">AB贷风险地图</div>
     <el-menu mode="horizontal" :default-active="activeIndex" class="nav-menu" @select="handleSelect">
       <el-menu-item index="home">首页</el-menu-item>
-      <el-menu-item index="quiz">防骗自测</el-menu-item>
-      <el-menu-item index="cases">案例列表</el-menu-item>
+      <el-menu-item index="quiz">AB贷自测</el-menu-item>
+      <el-menu-item index="cases">公开案例</el-menu-item>
       <el-menu-item index="report">举报入口</el-menu-item>
       <el-menu-item index="search">
         <el-icon><Search /></el-icon>

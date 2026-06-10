@@ -2,9 +2,9 @@
   <el-footer class="footer-bar" height="auto">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="brand-title">AB 贷诈骗识别与防护平台</div>
+        <div class="brand-title">AB贷风险识别与非法中介举报平台</div>
         <div class="brand-desc">
-          面向公众提供风险识别、案例科普、线索举报与进度查询服务。页面内容主要用于反诈教育与风险提醒。
+          面向公众提供AB贷定义解释、公开案例整理、风险自测、非法中介举报和进度查询服务。页面内容主要用于反诈教育与风险提醒。
         </div>
       </div>
 
@@ -12,8 +12,8 @@
         <div class="link-group">
           <div class="group-title">快捷入口</div>
           <el-link @click="go('/home')">首页</el-link>
-          <el-link @click="go('/quiz')">防骗自测</el-link>
-          <el-link @click="go('/cases')">案例列表</el-link>
+          <el-link @click="go('/quiz')">AB贷自测</el-link>
+          <el-link @click="go('/cases')">公开案例</el-link>
           <el-link @click="go('/report')">举报入口</el-link>
         </div>
 
@@ -21,7 +21,7 @@
           <div class="group-title">支持与说明</div>
           <el-link @click="go('/help')">帮助中心</el-link>
           <el-link @click="go('/policy')">隐私声明</el-link>
-          <el-link @click="go('/about')">关于 AB 贷</el-link>
+          <el-link @click="go('/about')">关于 AB贷</el-link>
           <el-link @click="go('/stats')">数据统计</el-link>
         </div>
 
@@ -34,8 +34,8 @@
     </div>
 
     <div class="footer-bottom">
-      <span>© 2026 AB 贷反诈项目</span>
-      <span>建议在紧急情况下优先联系警方或官方反诈渠道</span>
+      <span>© 2026 AB贷反诈项目</span>
+      <span>紧急情况下请优先联系警方、放款机构或官方反诈渠道</span>
     </div>
   </el-footer>
 </template>

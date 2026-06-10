@@ -231,16 +231,16 @@ const stats = reactive({
 
 // 高频话术数据
 const commonPhrases = ref([
-  { phrase: '您的贷款已通过审核，需要先交保证金', frequency: 342, riskLevel: '高' },
-  { phrase: '征信修复可以解决贷款问题', frequency: 298, riskLevel: '高' },
-  { phrase: '需要刷流水才能提高额度', frequency: 276, riskLevel: '高' },
-  { phrase: '官方授权代理，可加急办理', frequency: 254, riskLevel: '高' },
-  { phrase: '微粒贷、借呗、金条邀请您申请', frequency: 231, riskLevel: '中' },
-  { phrase: '账户异常，需要验证身份信息', frequency: 218, riskLevel: '中' },
-  { phrase: '恭喜获得免息贷款资格', frequency: 195, riskLevel: '中' },
-  { phrase: '解冻账户需先转账', frequency: 187, riskLevel: '高' },
-  { phrase: '我们是国有银行合作机构', frequency: 164, riskLevel: '中' },
-  { phrase: '需要验证卡号和密码激活额度', frequency: 156, riskLevel: '高' },
+  { phrase: '你只是担保人，不用负责还款', frequency: 342, riskLevel: '高' },
+  { phrase: '先用你的征信走流程，6个月后转到A名下', frequency: 298, riskLevel: '高' },
+  { phrase: '你只是监管人/紧急联系人，不是借款人', frequency: 276, riskLevel: '高' },
+  { phrase: '贷款到账后先转给A或中介代管', frequency: 254, riskLevel: '高' },
+  { phrase: '中介有内部渠道，可以包装资质', frequency: 231, riskLevel: '高' },
+  { phrase: '不影响你的征信，我们会负责还款', frequency: 218, riskLevel: '高' },
+  { phrase: '刷脸和签字只是验证身份', frequency: 195, riskLevel: '中' },
+  { phrase: '服务费从贷款里扣，不用你额外出钱', frequency: 187, riskLevel: '中' },
+  { phrase: '亲友资金周转，帮忙过一下账', frequency: 164, riskLevel: '中' },
+  { phrase: '带身份证和银行卡到门店面签即可', frequency: 156, riskLevel: '中' },
 ]);
 
 // 计算属性

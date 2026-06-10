@@ -1,32 +1,25 @@
-<!--
- * @Author: arron Zhu
- * @Date: 2025-07-26 23:35:55
- * @lastEditor: arron Zhu
- * @LastEditTime: 2025-07-26 23:58:14
- * @Description:
--->
 <template>
   <div class="home-page">
     <el-card class="hero" shadow="never">
       <template #header>
-        <div class="hero-title">AB 贷诈骗识别与防护平台</div>
+        <div class="hero-title">AB贷风险识别与非法中介举报平台</div>
       </template>
       <p class="hero-desc">
-        用真实案例、风险地图与举报入口，帮助用户快速识别 AB 贷套路，降低二次受骗风险。
+        AB贷通常是实际用款人A资质不足，黑中介诱导征信较好的B以本人名义申请贷款。钱由A使用，合同和征信风险却可能落到B身上。
       </p>
       <div class="hero-tags">
-        <el-tag type="danger">高风险：先收费再放款</el-tag>
-        <el-tag type="warning">警惕：伪造军官/银行身份</el-tag>
-        <el-tag>建议：全程留证并及时报案</el-tag>
+        <el-tag type="danger">高风险：担保人变借款人</el-tag>
+        <el-tag type="warning">警惕：监管人/紧急联系人话术</el-tag>
+        <el-tag>建议：保存合同、聊天、转账和门店证据</el-tag>
       </div>
       <div class="hero-actions">
-        <el-button type="primary" class="quiz-btn" @click="goQuiz">3 分钟防骗自测</el-button>
-        <el-button @click="goReport">立即举报线索</el-button>
+        <el-button type="primary" class="quiz-btn" @click="goQuiz">3分钟AB贷自测</el-button>
+        <el-button @click="goReport">举报非法中介</el-button>
       </div>
     </el-card>
 
     <el-alert
-      title="紧急提醒：凡是要求先缴纳保证金、解冻金、刷流水的贷款，基本可判定为诈骗。"
+      title="风险提醒：凡是让你替别人贷款、过账、做“监管人/紧急联系人”，都可能让你成为法律借款人。"
       type="error"
       show-icon
       :closable="false"
@@ -59,7 +52,7 @@
         <el-card shadow="never" class="featured-card">
           <template #header>
             <div class="section-head">
-              <span>热门案例</span>
+              <span>公开案例</span>
               <el-button link type="primary" @click="goCases">查看全部</el-button>
             </div>
           </template>
@@ -99,9 +92,9 @@
     </el-row>
 
     <el-card shadow="hover" class="cta-panel">
-      <div class="cta-title">如果你已经遇到疑似 AB 贷诈骗，现在就采取行动</div>
+      <div class="cta-title">已经遇到疑似AB贷或助贷黑中介？现在就固定证据</div>
       <div class="cta-desc">
-        先停止转账，再保存证据，随后完成风险自测或直接提交举报。若你只是想先了解规则，也可以查看帮助中心与隐私声明。
+        先停止签字、刷脸、转账和过账，保存合同、聊天记录、转账凭证、门店照片和人员信息，再进行风险自测或提交举报。
       </div>
       <el-space wrap>
         <el-button type="primary" @click="goReport">立即举报</el-button>
@@ -122,16 +115,16 @@ import { FRAUD_CASES } from '@/constants/cases'
 const router = useRouter()
 
 const quickEntries = [
-  { title: '防骗自测', description: '3 分钟评估自身风险暴露程度', path: '/quiz' },
-  { title: '案例列表', description: '查看常见套路与预警信号', path: '/cases' },
-  { title: '帮助中心', description: '了解举报流程与常见问题', path: '/help' },
-  { title: '隐私声明', description: '查看信息采集与法律说明', path: '/policy' },
+  { title: 'AB贷自测', description: '识别担保人、监管人、过账、转名等高危话术', path: '/quiz' },
+  { title: '公开案例', description: '查看公开报道和监管提示整理的AB贷案例', path: '/cases' },
+  { title: '举报入口', description: '提交非法中介门店、人员、地址和证据材料', path: '/report' },
+  { title: '帮助中心', description: '了解AB贷定义、取证要点和后续处理建议', path: '/help' },
 ]
 
 const faqPreview = [
-  { title: '提交举报需要准备什么材料？', description: '建议至少准备聊天、转账、收款账户与合同截图。' },
-  { title: '查询不到编号怎么办？', description: '先检查输入是否完整，再确认是否提交成功。' },
-  { title: '什么情况可以高度怀疑是 AB 贷诈骗？', description: '凡是放款前收费、要验证码、催促转账，都应高度警惕。' },
+  { title: 'AB贷是什么？', description: 'A用款、B申请贷款，B可能成为合同借款人并承担还款责任。' },
+  { title: '哪些话术最危险？', description: '“只是担保”“监管人”“紧急联系人”“6个月转名”都要高度警惕。' },
+  { title: '举报需要准备什么？', description: '建议准备门店地址、人员信息、合同、聊天记录、转账凭证和照片。' },
 ]
 
 const featuredCases = computed(() => {
@@ -185,6 +178,7 @@ function goCaseDetail(id: string) {
   .hero-desc {
     margin: 0 0 12px;
     color: #606266;
+    line-height: 1.7;
   }
 
   .hero-tags {
