@@ -72,4 +72,7 @@ declare module 'vue' {
     SkeletonLoader: typeof import('./components/SkeletonLoader.vue')['default']
     VictimList: typeof import('./components/VictimList.vue')['default']
   }
+  export interface GlobalDirectives {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
+  }
 }

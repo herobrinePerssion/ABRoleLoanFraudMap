@@ -31,9 +31,10 @@ function getReportCity(report: ReportRecord) {
   return parts[1] || parts[0] || '未知城市'
 }
 
-export function getSubmittedReportPoints(): ReportMapPoint[] {
+export async function getSubmittedReportPoints(): Promise<ReportMapPoint[]> {
   try {
-    return getReportRecords()
+    const reports = await getReportRecords()
+    return reports
       .filter(report => Boolean(report.mapPoint))
       .map(report => ({
         id: report.id,
@@ -52,9 +53,10 @@ export function getSubmittedReportPoints(): ReportMapPoint[] {
   }
 }
 
-export function getSubmittedReportRows() {
+export async function getSubmittedReportRows() {
   try {
-    return getReportRecords().map(report => ({
+    const reports = await getReportRecords()
+    return reports.map(report => ({
       id: report.id,
       name: report.name,
       city: getReportCity(report),
@@ -69,7 +71,7 @@ export function getSubmittedReportRows() {
   }
 }
 
-export function getAllReportMapPoints(): ReportMapPoint[] {
+export async function getAllReportMapPoints(): Promise<ReportMapPoint[]> {
   const samplePoints = (fraudData as FraudDataItem[]).map(item => ({
     id: item.id,
     name: item.name,
@@ -82,5 +84,5 @@ export function getAllReportMapPoints(): ReportMapPoint[] {
     source: 'sample' as const,
   }))
 
-  return [...getSubmittedReportPoints(), ...samplePoints]
+  return [...await getSubmittedReportPoints(), ...samplePoints]
 }

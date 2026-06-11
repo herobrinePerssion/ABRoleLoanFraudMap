@@ -56,7 +56,20 @@
               <el-descriptions-item v-if="record.contactPhone || record.legalPersonPhone" label="联系方式">
                 {{ [record.legalPersonPhone, record.contactPhone].filter(Boolean).join(' / ') }}
               </el-descriptions-item>
-              <el-descriptions-item v-if="record.photoNames?.length" label="照片材料">
+              <el-descriptions-item v-if="record.attachments?.length" label="附件材料">
+                <el-space wrap>
+                  <el-link
+                    v-for="file in record.attachments"
+                    :key="file.id"
+                    type="primary"
+                    :href="file.url"
+                    target="_blank"
+                  >
+                    {{ file.name }}
+                  </el-link>
+                </el-space>
+              </el-descriptions-item>
+              <el-descriptions-item v-else-if="record.photoNames?.length" label="照片材料">
                 {{ record.photoNames.join('、') }}
               </el-descriptions-item>
               <el-descriptions-item v-if="record.description" label="线索描述">
@@ -123,20 +136,20 @@ const statusTagType = computed(() => {
   return REPORT_STATUS_TAG_TYPE[record.value.status]
 })
 
-function loadRecordById(id: string) {
+async function loadRecordById(id: string) {
   const cleanId = normalizeReportId(id)
   if (!cleanId) {
     record.value = null
     return
   }
-  record.value = findReportById(cleanId)
+  record.value = await findReportById(cleanId)
 }
 
-function executeQuery(id: string) {
+async function executeQuery(id: string) {
   queryLoading.value = true
   queryError.value = ''
   try {
-    loadRecordById(id)
+    await loadRecordById(id)
   } catch (error) {
     record.value = null
     queryError.value = error instanceof Error ? error.message : '查询异常，请稍后重试'

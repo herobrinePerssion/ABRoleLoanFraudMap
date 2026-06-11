@@ -26,12 +26,12 @@
 <script setup lang="ts">
 import { getSubmittedReportRows } from '@/services/reportMapService'
 
-type ReportRow = ReturnType<typeof getSubmittedReportRows>[number]
+type ReportRow = Awaited<ReturnType<typeof getSubmittedReportRows>>[number]
 
 const reports = ref<ReportRow[]>([])
 
-function loadReports() {
-  reports.value = getSubmittedReportRows()
+async function loadReports() {
+  reports.value = await getSubmittedReportRows()
 }
 
 function handleClick(report: ReportRow) {

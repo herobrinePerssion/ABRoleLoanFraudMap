@@ -214,6 +214,7 @@ const getReportTagType = (status: string): any => {
     待初审: 'warning',
     处理中: 'info',
     已反馈: 'success',
+    已驳回: 'danger',
   };
   return map[status] || 'info';
 };

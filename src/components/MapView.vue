@@ -159,9 +159,8 @@ function locateMap(event: Event) {
 async function initMap() {
   if (!mapContainerRef.value) return
 
-  points.value = getAllReportMapPoints()
-
   try {
+    points.value = await getAllReportMapPoints()
     await loadAmapScript()
     mapInstance = new AMap.Map(mapContainerRef.value, {
       zoom: 5,

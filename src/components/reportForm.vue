@@ -117,7 +117,7 @@
 import { Plus } from '@element-plus/icons-vue'
 import type { UploadProps, UploadUserFile } from 'element-plus'
 import type { ReportFormData } from '@/types/report'
-import { createReportRecord, saveReportRecord } from '@/services/reportService'
+import { submitReport } from '@/services/reportService'
 
 declare const AMap: any
 
@@ -264,6 +264,12 @@ const handlePhotoRemove: UploadProps['onRemove'] = () => {
   syncPhotoNames()
 }
 
+function getPhotoFiles() {
+  return fileList.value
+    .map(file => file.raw)
+    .filter((file): file is File => file instanceof File)
+}
+
 function getNormalizedAddress() {
   const locationAddress = locationMode.value === 'map'
     ? form.mapAddress?.trim()
@@ -313,7 +319,7 @@ function resetForm() {
   }
 }
 
-function submit() {
+async function submit() {
   if (submitting.value || !validateForm()) {
     return
   }
@@ -323,14 +329,16 @@ function submit() {
     form.address = getNormalizedAddress()
     syncPhotoNames()
 
-    const record = createReportRecord({
-      ...form,
-      name: form.name.trim(),
-      address: form.address,
-      description: form.description.trim(),
-    })
+    const record = await submitReport(
+      {
+        ...form,
+        name: form.name.trim(),
+        address: form.address,
+        description: form.description.trim(),
+      },
+      getPhotoFiles()
+    )
 
-    saveReportRecord(record)
     ElMessage.success(`提交成功，编号：${record.id}`)
     emit('submitted', { id: record.id })
     resetForm()

@@ -1,9 +1,17 @@
-export type ReportStatus = '待初审' | '处理中' | '已反馈'
+export type ReportStatus = '待初审' | '处理中' | '已反馈' | '已驳回'
 
 export interface ReportUpdate {
   time: string
   content: string
   operator?: string
+}
+
+export interface ReportAttachment {
+  id: string
+  name: string
+  size: number
+  type: string
+  url: string
 }
 
 export interface ReportRecord {
@@ -26,6 +34,7 @@ export interface ReportRecord {
   contactPhone?: string
   businessClues?: string
   photoNames?: string[]
+  attachments?: ReportAttachment[]
   status: ReportStatus
   createdAt: string
   updates: ReportUpdate[]

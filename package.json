@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cf:d1:create": "pnpm dlx wrangler d1 create ab-loan-fraud-map",
+    "cf:d1:migrate": "pnpm dlx wrangler d1 migrations apply ab-loan-fraud-map",
+    "cf:r2:create": "pnpm dlx wrangler r2 bucket create ab-loan-fraud-report-files",
+    "cf:deploy": "pnpm build && pnpm dlx wrangler pages deploy dist"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

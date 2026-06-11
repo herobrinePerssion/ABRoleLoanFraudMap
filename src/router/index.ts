@@ -17,6 +17,7 @@ const Policy = () => import('@/views/Policy.vue')
 const Search = () => import('@/views/Search.vue')
 const Feedback = () => import('@/views/Feedback.vue')
 const Profile = () => import('@/views/Profile.vue')
+const AdminReports = () => import('@/views/AdminReports.vue')
 
 // 路由配置
 const routes = [
@@ -98,6 +99,12 @@ const routes = [
     name: 'profile',
     component: Profile,
     meta: { title: '个人中心' },
+  },
+  {
+    path: '/admin/reports',
+    name: 'adminReports',
+    component: AdminReports,
+    meta: { title: '举报审核后台' },
   },
 ]
 
