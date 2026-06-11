@@ -85,3 +85,16 @@ export async function reviewReport(params: {
     }
   )
 }
+
+export async function deleteReport(params: {
+  account: AdminAccount
+  id: string
+}) {
+  return adminRequest<{ ok: boolean; id: string }>(
+    `/api/reports/admin/${encodeURIComponent(params.id)}`,
+    params.account,
+    {
+      method: 'DELETE',
+    }
+  )
+}

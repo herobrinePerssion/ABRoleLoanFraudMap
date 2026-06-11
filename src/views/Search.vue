@@ -211,10 +211,9 @@ const getRiskTagType = (riskLevel: string): any => {
 
 const getReportTagType = (status: string): any => {
   const map: Record<string, string> = {
-    待初审: 'warning',
-    处理中: 'info',
-    已反馈: 'success',
-    已驳回: 'danger',
+    审核中: 'warning',
+    驳回: 'danger',
+    审核通过: 'success',
   };
   return map[status] || 'info';
 };

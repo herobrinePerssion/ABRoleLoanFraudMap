@@ -74,9 +74,9 @@
                 @change="loadReports"
               >
                 <el-option label="全部" value="" />
-                <el-option label="待初审" value="待初审" />
-                <el-option label="处理中" value="处理中" />
-                <el-option label="已反馈" value="已反馈" />
+                <el-option label="审核中" value="审核中" />
+                <el-option label="驳回" value="驳回" />
+                <el-option label="审核通过" value="审核通过" />
               </el-select>
             </div>
 
@@ -107,7 +107,7 @@
                 <div class="card-footer">
                   <span class="time">📅 {{ formatDate(report.createdAt) }}</span>
                   <el-button
-                    v-if="report.status !== '待初审'"
+                    v-if="report.status !== '审核中'"
                     type="text"
                     size="small"
                     @click="viewReportDetail(report.reportId)"
@@ -263,7 +263,7 @@ const loadReports = async () => {
 
     reports.value = filtered;
     reportStats.total = data.total;
-    reportStats.pending = data.items.filter((r) => r.status === '待初审').length;
+    reportStats.pending = data.items.filter((r) => r.status === '审核中').length;
   } catch (error: any) {
     ElMessage.error('加载举报列表失败');
   } finally {
@@ -325,10 +325,9 @@ const deleteAllData = async () => {
 
 const getReportTagType = (status: string): any => {
   const map: Record<string, string> = {
-    待初审: 'warning',
-    处理中: 'info',
-    已反馈: 'success',
-    已驳回: 'danger',
+    审核中: 'warning',
+    驳回: 'danger',
+    审核通过: 'success',
   };
   return map[status] || 'info';
 };
@@ -556,16 +555,27 @@ loadFeedbacks();
   }
 
   .page-header {
+    margin-bottom: 24px;
+
     h1 {
       font-size: 24px;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .subtitle {
+      line-height: 1.6;
     }
   }
 
   .profile-container {
+    margin-bottom: 20px;
+
     .stat-card {
       padding: 16px;
       flex-direction: column;
       text-align: center;
+      gap: 10px;
 
       .stat-icon {
         font-size: 36px;
@@ -578,7 +588,8 @@ loadFeedbacks();
   }
 
   .content-container {
-    padding: 20px;
+    padding: 14px;
+    border-radius: 8px;
 
     :deep(.el-tabs__nav-wrap) {
       overflow-x: auto;
@@ -593,6 +604,10 @@ loadFeedbacks();
       font-size: 14px;
       padding: 0 12px;
     }
+  }
+
+  .tab-content {
+    padding: 12px 0 0;
   }
 
   .filter-bar {
@@ -611,9 +626,18 @@ loadFeedbacks();
         flex-direction: column;
         gap: 10px;
 
+        .report-id,
+        .feedback-id {
+          overflow-wrap: anywhere;
+        }
+
         h4 {
           overflow-wrap: anywhere;
         }
+      }
+
+      .description {
+        overflow-wrap: anywhere;
       }
 
       .card-footer {

@@ -356,12 +356,12 @@ export const reportApi = {
       reports.push({
         ...data,
         reportId,
-        status: '待初审',
+        status: '审核中',
         createdAt: new Date().toISOString(),
       });
       localStorage.setItem('reports', JSON.stringify(reports));
 
-      return { reportId, status: '待初审' };
+      return { reportId, status: '审核中' };
     });
   },
 

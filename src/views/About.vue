@@ -177,4 +177,35 @@ const cases = ref([
     }
   }
 }
+
+@media (max-width: 768px) {
+  .about-page {
+    :deep(.el-card__header),
+    :deep(.el-card__body) {
+      padding: 14px;
+    }
+
+    .intro-card .intro-content {
+      gap: 12px;
+
+      .text {
+        padding-right: 0;
+        min-width: 0;
+      }
+
+      img {
+        max-width: 100%;
+      }
+    }
+
+    .case-card {
+      min-height: 0;
+      margin-bottom: 12px;
+    }
+
+    .reference-card ul {
+      padding-left: 18px;
+    }
+  }
+}
 </style>

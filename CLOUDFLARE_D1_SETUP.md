@@ -63,7 +63,11 @@ The deployed app uses these endpoints:
 
 Review statuses:
 
-- `待初审`: default status after user submission, hidden from the public home map/table
-- `处理中`: approved for public map/table display and still in progress
-- `已反馈`: approved for public map/table display and completed
-- `已驳回`: hidden from the public map/table
+- `审核中`: default status after user submission, hidden from the public home map/table
+- `驳回`: hidden from the public map/table
+- `审核通过`: approved for public map/table display
+
+Admin behavior:
+
+- `审核中` and `驳回` can be reviewed.
+- `审核通过` cannot be reviewed again and can only be deleted.

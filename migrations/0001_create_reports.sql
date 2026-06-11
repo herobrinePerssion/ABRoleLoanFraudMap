@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS reports (
   contact_phone TEXT,
   business_clues TEXT,
   photo_names_json TEXT NOT NULL DEFAULT '[]',
-  status TEXT NOT NULL DEFAULT '待初审',
+  status TEXT NOT NULL DEFAULT '审核中',
   created_at TEXT NOT NULL,
   updates_json TEXT NOT NULL DEFAULT '[]'
 );

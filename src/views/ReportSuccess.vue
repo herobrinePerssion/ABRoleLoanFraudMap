@@ -36,9 +36,9 @@
 
             <el-steps :active="activeStep" finish-status="success" align-center>
               <el-step title="已提交" />
-              <el-step title="待初审" />
-              <el-step title="处理中" />
-              <el-step title="已反馈" />
+              <el-step title="审核中" />
+              <el-step title="驳回" />
+              <el-step title="审核通过" />
             </el-steps>
 
             <el-descriptions class="record-desc" :column="1" border>
@@ -242,6 +242,51 @@ watch(
 @media (max-width: 992px) {
   .success-page {
     padding: 0 12px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout-row {
+    :deep(.el-col) {
+      margin-bottom: 14px;
+    }
+  }
+
+  :deep(.el-result) {
+    padding: 20px 0;
+  }
+
+  :deep(.el-result__extra .el-space),
+  :deep(.el-result__extra .el-space__item) {
+    width: 100%;
+  }
+
+  :deep(.el-result__extra .el-tag),
+  :deep(.el-result__extra .el-button) {
+    width: 100%;
+    white-space: normal;
+    height: auto;
+    min-height: 32px;
+    text-align: center;
+  }
+
+  :deep(.el-steps) {
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  :deep(.el-step) {
+    min-width: 96px;
+  }
+
+  .record-desc {
+    :deep(.el-descriptions__label) {
+      width: 92px;
+    }
+  }
+
+  .query-btn {
+    margin-left: 0;
   }
 }
 </style>

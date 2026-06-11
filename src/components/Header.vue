@@ -115,6 +115,7 @@ async function loginAdmin() {
   height: 60px;
   display: flex;
   align-items: center;
+  position: relative;
   margin-bottom: 20px;
   justify-content: flex-start;
   background-color: #fff;
@@ -186,6 +187,7 @@ async function loginAdmin() {
   .logo {
     font-size: 16px;
     line-height: 1.4;
+    padding-right: 48px;
     overflow: hidden;
     text-overflow: ellipsis;
   }

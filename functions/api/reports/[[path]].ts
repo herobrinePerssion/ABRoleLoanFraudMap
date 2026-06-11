@@ -70,12 +70,11 @@ const ALLOWED_FILE_TYPES = new Set([
   'application/pdf',
 ])
 const REPORT_STATUS = {
-  pending: '\u5f85\u521d\u5ba1',
-  processing: '\u5904\u7406\u4e2d',
-  feedback: '\u5df2\u53cd\u9988',
-  rejected: '\u5df2\u9a73\u56de',
+  reviewing: '\u5ba1\u6838\u4e2d',
+  rejected: '\u9a73\u56de',
+  approved: '\u5ba1\u6838\u901a\u8fc7',
 } as const
-const PUBLIC_STATUSES = new Set([REPORT_STATUS.processing, REPORT_STATUS.feedback])
+const PUBLIC_STATUSES = new Set([REPORT_STATUS.approved])
 const REVIEW_STATUSES = new Set(Object.values(REPORT_STATUS))
 
 function json(data: unknown, status = 200) {
@@ -200,8 +199,8 @@ async function getReportRow(env: Env, id: string) {
 
 async function listReports(env: Env) {
   const result = await env.DB.prepare(
-    `SELECT * FROM reports WHERE status IN (?, ?) ORDER BY created_at DESC LIMIT 200`
-  ).bind(REPORT_STATUS.processing, REPORT_STATUS.feedback).all<ReportRow>()
+    `SELECT * FROM reports WHERE status = ? ORDER BY created_at DESC LIMIT 200`
+  ).bind(REPORT_STATUS.approved).all<ReportRow>()
 
   return json({
     items: (result.results || [])
@@ -260,6 +259,10 @@ async function reviewReport(request: Request, env: Env, id: string) {
     return json({ message: 'report not found' }, 404)
   }
 
+  if (row.status === REPORT_STATUS.approved) {
+    return json({ message: 'approved reports can only be deleted' }, 400)
+  }
+
   const payload = await request.json().catch(() => null) as {
     status?: string
     feedback?: string
@@ -287,6 +290,23 @@ async function reviewReport(request: Request, env: Env, id: string) {
   return getReport(env, reportId)
 }
 
+async function deleteReport(request: Request, env: Env, id: string) {
+  const authError = requireAdmin(request, env)
+  if (authError) return authError
+
+  const reportId = normalizeReportId(id)
+  const row = await getReportRow(env, reportId)
+  if (!row) {
+    return json({ message: 'report not found' }, 404)
+  }
+
+  await env.DB.prepare(
+    `DELETE FROM reports WHERE id = ?`
+  ).bind(reportId).run()
+
+  return json({ ok: true, id: reportId })
+}
+
 async function createReport(request: Request, env: Env) {
   const payload = await request.json().catch(() => null) as ReportFormData | null
   if (!payload) {
@@ -307,12 +327,12 @@ async function createReport(request: Request, env: Env) {
 
   const now = new Date()
   const id = generateReportId(now)
-  const status = REPORT_STATUS.pending
+  const status = REPORT_STATUS.reviewing
   const createdAt = now.toISOString()
   const updates = [
     {
       time: now.toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' }),
-      content: '线索已提交，等待初审。请保留证据材料原件。',
+      content: '线索已提交，等待管理员审核。请保留证据材料原件。',
     },
   ]
 
@@ -468,6 +488,10 @@ export const onRequest: PagesFunction<Env> = async ({ request, env, params }) =>
     segments[0] === 'admin'
   ) {
     return reviewReport(request, env, segments[1])
+  }
+
+  if (request.method === 'DELETE' && segments.length === 2 && segments[0] === 'admin') {
+    return deleteReport(request, env, segments[1])
   }
 
   if (request.method === 'GET' && segments.length === 0) {

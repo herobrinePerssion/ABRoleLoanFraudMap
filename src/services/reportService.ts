@@ -98,12 +98,12 @@ export function createReportRecord(payload: ReportFormData): ReportRecord {
     businessClues: payload.businessClues?.trim(),
     photoNames: payload.photoNames || [],
     attachments: [],
-    status: '待初审' as ReportRecord['status'],
+    status: '审核中' as ReportRecord['status'],
     createdAt: now.toISOString(),
     updates: [
       {
         time: now.toLocaleString(),
-        content: '线索已提交，等待初审。请保留证据材料原件。',
+        content: '线索已提交，等待管理员审核。请保留证据材料原件。',
       },
     ],
   }

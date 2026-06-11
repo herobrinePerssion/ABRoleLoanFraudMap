@@ -1,4 +1,4 @@
-export type ReportStatus = '待初审' | '处理中' | '已反馈' | '已驳回'
+export type ReportStatus = '审核中' | '驳回' | '审核通过'
 
 export interface ReportUpdate {
   time: string

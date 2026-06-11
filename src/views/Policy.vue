@@ -184,4 +184,28 @@ p {
     padding: 0 12px 16px;
   }
 }
+
+@media (max-width: 768px) {
+  .policy-page {
+    :deep(.el-card__header),
+    :deep(.el-card__body) {
+      padding: 14px;
+    }
+
+    .policy-list {
+      padding-left: 18px;
+    }
+
+    :deep(.el-space),
+    :deep(.el-space__item),
+    :deep(.el-button) {
+      width: 100%;
+    }
+
+    p,
+    li {
+      overflow-wrap: anywhere;
+    }
+  }
+}
 </style>

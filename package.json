@@ -8,7 +8,7 @@
     "preview": "vite preview",
     "cf:d1:create": "pnpm dlx wrangler d1 create ab-loan-fraud-map",
     "cf:d1:migrate": "pnpm dlx wrangler d1 migrations apply ab-loan-fraud-map",
-    "cf:deploy": "pnpm build && pnpm dlx wrangler pages deploy dist"
+    "cf:deploy": "pnpm build && pnpm dlx wrangler pages deploy dist --project-name abroleloanfraudmap --commit-dirty=true"
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.2",

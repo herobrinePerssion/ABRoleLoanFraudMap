@@ -279,4 +279,33 @@ function copyShareLink() {
     padding: 0 12px 16px;
   }
 }
+
+@media (max-width: 768px) {
+  .detail-page {
+    :deep(.el-card__header),
+    :deep(.el-card__body) {
+      padding: 14px;
+    }
+  }
+
+  .title-wrap,
+  :deep(.el-space.mt-14) {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  :deep(.el-space.mt-14),
+  :deep(.el-space.mt-14 .el-space__item),
+  :deep(.el-space.mt-14 .el-button) {
+    width: 100%;
+  }
+
+  :deep(.el-descriptions__label) {
+    width: 92px;
+  }
+
+  .related-card .related-item {
+    margin-bottom: 10px;
+  }
+}
 </style>

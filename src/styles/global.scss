@@ -45,6 +45,47 @@ video {
 }
 
 @media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+
+  .el-main {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .el-card__header,
+  .el-card__body {
+    padding: 14px;
+  }
+
+  .el-input,
+  .el-select,
+  .el-textarea,
+  .el-date-editor {
+    max-width: 100%;
+  }
+
+  .el-tabs__nav-wrap,
+  .el-tabs__nav-scroll {
+    max-width: 100%;
+  }
+
+  .el-tabs__item {
+    white-space: nowrap;
+  }
+
+  .el-page-header {
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .el-page-header__content {
+    min-width: 0;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
   .el-message-box,
   .el-dialog {
     width: calc(100vw - 24px) !important;
@@ -68,5 +109,37 @@ video {
 
   .el-button + .el-button {
     margin-left: 0;
+  }
+
+  .el-radio-group,
+  .el-checkbox-group {
+    max-width: 100%;
+  }
+
+  .el-radio,
+  .el-checkbox {
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .el-descriptions__label,
+  .el-descriptions__content,
+  .el-table .cell {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  .el-descriptions__label {
+    min-width: 86px;
+  }
+
+  .el-pagination {
+    max-width: 100%;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .el-space {
+    max-width: 100%;
   }
 }
