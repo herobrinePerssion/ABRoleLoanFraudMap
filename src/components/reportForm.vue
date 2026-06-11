@@ -363,6 +363,8 @@ function submit() {
 .map-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
   min-height: 40px;
   padding: 8px 12px;
   color: #606266;
@@ -399,9 +401,23 @@ function submit() {
   }
 
   :deep(.el-cascader),
+  :deep(.el-input),
+  :deep(.el-textarea),
   :deep(.el-button),
   :deep(.el-segmented) {
     width: 100%;
+  }
+
+  :deep(.el-upload--picture-card),
+  :deep(.el-upload-list--picture-card .el-upload-list__item) {
+    width: 96px;
+    height: 96px;
+  }
+
+  :deep(.el-upload-list--picture-card) {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+    gap: 8px;
   }
 
   .map-container {
