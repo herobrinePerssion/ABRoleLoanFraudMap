@@ -2,12 +2,12 @@ name = "ab-loan-fraud-map"
 compatibility_date = "2026-06-11"
 pages_build_output_dir = "dist"
 
+[vars]
+ADMIN_USERNAME = "abRoleAdmin"
+ADMIN_PASSWORD = "391568Zgf,"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "ab-loan-fraud-map"
 database_id = "a768e86a-f100-406f-9829-2d1213943fbf"
 migrations_dir = "migrations"
-
-[[r2_buckets]]
-binding = "REPORT_FILES"
-bucket_name = "ab-loan-fraud-report-files"

@@ -97,8 +97,6 @@
 </template>
 
 <script setup lang="ts">
-import { Plus } from '@element-plus/icons-vue'
-import type { UploadProps, UploadUserFile } from 'element-plus'
 import type { ReportFormData } from '@/types/report'
 import { submitReport } from '@/services/reportService'
 
@@ -110,7 +108,6 @@ const emit = defineEmits<{
 
 const formRef = ref()
 const mapContainerRef = ref<HTMLElement>()
-const fileList = ref<UploadUserFile[]>([])
 const submitting = ref(false)
 const locationMode = ref<'manual' | 'map'>('manual')
 const mapLoaded = ref(false)
@@ -235,24 +232,6 @@ function reverseGeocode(point: { lng: number; lat: number }) {
   })
 }
 
-const syncPhotoNames = () => {
-  form.photoNames = fileList.value.map(file => file.name).filter(Boolean)
-}
-
-const handlePhotoChange: UploadProps['onChange'] = () => {
-  syncPhotoNames()
-}
-
-const handlePhotoRemove: UploadProps['onRemove'] = () => {
-  syncPhotoNames()
-}
-
-function getPhotoFiles() {
-  return fileList.value
-    .map(file => file.raw)
-    .filter((file): file is File => file instanceof File)
-}
-
 function getNormalizedAddress() {
   const locationAddress = locationMode.value === 'map'
     ? form.mapAddress?.trim()
@@ -294,7 +273,6 @@ function resetForm() {
   form.description = ''
   form.businessClues = ''
   form.photoNames = []
-  fileList.value = []
 
   if (markerInstance) {
     markerInstance.setMap(null)
@@ -310,17 +288,13 @@ async function submit() {
   submitting.value = true
   try {
     form.address = getNormalizedAddress()
-    syncPhotoNames()
 
-    const record = await submitReport(
-      {
-        ...form,
-        name: form.name.trim(),
-        address: form.address,
-        description: form.description.trim(),
-      },
-      getPhotoFiles()
-    )
+    const record = await submitReport({
+      ...form,
+      name: form.name.trim(),
+      address: form.address,
+      description: form.description.trim(),
+    })
 
     ElMessage.success(`提交成功，编号：${record.id}`)
     emit('submitted', { id: record.id })
@@ -362,15 +336,8 @@ async function submit() {
   border-top: 1px solid #ebeef5;
 }
 
-.upload-tip {
-  color: #909399;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
 :deep(.el-cascader),
-:deep(.el-segmented),
-:deep(.el-upload-list) {
+:deep(.el-segmented) {
   width: 100%;
 }
 
@@ -397,18 +364,6 @@ async function submit() {
   :deep(.el-button),
   :deep(.el-segmented) {
     width: 100%;
-  }
-
-  :deep(.el-upload--picture-card),
-  :deep(.el-upload-list--picture-card .el-upload-list__item) {
-    width: 96px;
-    height: 96px;
-  }
-
-  :deep(.el-upload-list--picture-card) {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
-    gap: 8px;
   }
 
   .map-container {

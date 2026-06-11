@@ -5,23 +5,26 @@
     <el-card shadow="never" class="admin-card">
       <template #header>
         <div class="card-head">
-          <span>管理员验证</span>
-          <el-button v-if="adminToken" link type="danger" @click="logout">清除口令</el-button>
+          <span>管理员账户</span>
+          <el-button v-if="isLoggedIn" link type="danger" @click="logout">退出</el-button>
         </div>
       </template>
 
       <el-form :inline="true" class="toolbar" @submit.prevent>
-        <el-form-item label="管理员口令">
+        <el-form-item label="账号">
+          <el-input v-model="accountForm.username" placeholder="管理员账号" clearable />
+        </el-form-item>
+        <el-form-item label="密码">
           <el-input
-            v-model="tokenInput"
+            v-model="accountForm.password"
             type="password"
             show-password
-            placeholder="输入 Cloudflare ADMIN_TOKEN"
+            placeholder="管理员密码"
             clearable
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="saveTokenAndLoad">进入审核</el-button>
+          <el-button type="primary" @click="saveAccountAndLoad">进入审核</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -48,13 +51,7 @@
         </el-form-item>
       </el-form>
 
-      <el-alert
-        v-if="error"
-        :title="error"
-        type="error"
-        show-icon
-        class="mb-12"
-      />
+      <el-alert v-if="error" :title="error" type="error" show-icon class="mb-12" />
 
       <el-table :data="reports" stripe v-loading="loading">
         <el-table-column prop="id" label="编号" width="150" />
@@ -64,11 +61,6 @@
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag :type="getStatusTag(row.status)">{{ row.status }}</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="附件" width="80">
-          <template #default="{ row }">
-            {{ row.attachments?.length || 0 }}
           </template>
         </el-table-column>
         <el-table-column label="提交时间" width="180">
@@ -94,19 +86,6 @@
           <el-descriptions-item label="描述">{{ currentReport.description }}</el-descriptions-item>
           <el-descriptions-item v-if="currentReport.mapPoint" label="坐标">
             {{ currentReport.mapPoint.lng.toFixed(6) }}, {{ currentReport.mapPoint.lat.toFixed(6) }}
-          </el-descriptions-item>
-          <el-descriptions-item v-if="currentReport.attachments?.length" label="附件">
-            <el-space wrap>
-              <el-link
-                v-for="file in currentReport.attachments"
-                :key="file.id"
-                type="primary"
-                :href="file.url"
-                target="_blank"
-              >
-                {{ file.name }}
-              </el-link>
-            </el-space>
           </el-descriptions-item>
         </el-descriptions>
 
@@ -138,22 +117,25 @@
 <script setup lang="ts">
 import type { ReportRecord, ReportStatus } from '@/types/report'
 import {
-  clearAdminToken,
+  clearAdminAccount,
+  getAdminAccount,
   getAdminReports,
-  getAdminToken,
   reviewReport,
-  saveAdminToken,
+  saveAdminAccount,
+  type AdminAccount,
 } from '@/services/adminReportService'
 
 const statusOptions: ReportStatus[] = ['待初审', '处理中', '已反馈', '已驳回']
-const adminToken = ref(getAdminToken())
-const tokenInput = ref(adminToken.value)
+const storedAccount = getAdminAccount()
+const account = ref<AdminAccount>(storedAccount)
+const accountForm = reactive<AdminAccount>({ ...storedAccount })
 const reports = ref<ReportRecord[]>([])
 const loading = ref(false)
 const reviewing = ref(false)
 const error = ref('')
 const dialogVisible = ref(false)
 const currentReport = ref<ReportRecord | null>(null)
+const isLoggedIn = computed(() => Boolean(account.value.username && account.value.password))
 const filters = reactive({
   status: '' as ReportStatus | '',
   keyword: '',
@@ -178,8 +160,8 @@ function formatTime(time: string) {
 }
 
 async function loadReports() {
-  if (!adminToken.value) {
-    ElMessage.warning('请先输入管理员口令')
+  if (!account.value.username || !account.value.password) {
+    ElMessage.warning('请先输入管理员账号和密码')
     return
   }
 
@@ -187,7 +169,7 @@ async function loadReports() {
   error.value = ''
   try {
     const data = await getAdminReports({
-      token: adminToken.value,
+      account: account.value,
       status: filters.status,
       keyword: filters.keyword,
     })
@@ -199,22 +181,27 @@ async function loadReports() {
   }
 }
 
-function saveTokenAndLoad() {
-  const token = tokenInput.value.trim()
-  if (!token) {
-    ElMessage.warning('请输入管理员口令')
+function saveAccountAndLoad() {
+  const nextAccount = {
+    username: accountForm.username.trim(),
+    password: accountForm.password,
+  }
+
+  if (!nextAccount.username || !nextAccount.password) {
+    ElMessage.warning('请输入管理员账号和密码')
     return
   }
 
-  saveAdminToken(token)
-  adminToken.value = token
+  saveAdminAccount(nextAccount)
+  account.value = nextAccount
   loadReports()
 }
 
 function logout() {
-  clearAdminToken()
-  adminToken.value = ''
-  tokenInput.value = ''
+  clearAdminAccount()
+  account.value = { username: 'abRoleAdmin', password: '' }
+  accountForm.username = 'abRoleAdmin'
+  accountForm.password = ''
   reports.value = []
 }
 
@@ -226,12 +213,12 @@ function openReview(report: ReportRecord) {
 }
 
 async function submitReview() {
-  if (!adminToken.value || !currentReport.value) return
+  if (!currentReport.value) return
 
   reviewing.value = true
   try {
     const updated = await reviewReport({
-      token: adminToken.value,
+      account: account.value,
       id: currentReport.value.id,
       status: reviewForm.status,
       feedback: reviewForm.feedback,
@@ -248,7 +235,7 @@ async function submitReview() {
 }
 
 onMounted(() => {
-  if (adminToken.value) {
+  if (isLoggedIn.value) {
     loadReports()
   }
 })

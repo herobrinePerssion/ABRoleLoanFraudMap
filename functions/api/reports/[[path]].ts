@@ -1,7 +1,8 @@
 interface Env {
   DB: D1Database
-  REPORT_FILES: R2Bucket
-  ADMIN_TOKEN?: string
+  REPORT_FILES?: R2Bucket
+  ADMIN_USERNAME?: string
+  ADMIN_PASSWORD?: string
 }
 
 interface ReportFormData {
@@ -108,20 +109,28 @@ function safeFileName(name: string) {
     .slice(0, 120) || 'file'
 }
 
+function getAdminCredentials(env: Env) {
+  return {
+    username: env.ADMIN_USERNAME || 'abRoleAdmin',
+    password: env.ADMIN_PASSWORD || '',
+  }
+}
+
 function isAdminRequest(request: Request, env: Env) {
-  if (!env.ADMIN_TOKEN) {
+  const { username, password } = getAdminCredentials(env)
+  if (!username || !password) {
     return false
   }
 
-  const auth = request.headers.get('Authorization') || ''
-  const bearerToken = auth.startsWith('Bearer ') ? auth.slice(7).trim() : ''
-  const headerToken = request.headers.get('x-admin-token') || ''
-  return bearerToken === env.ADMIN_TOKEN || headerToken === env.ADMIN_TOKEN
+  const requestUsername = request.headers.get('x-admin-username') || ''
+  const requestPassword = request.headers.get('x-admin-password') || ''
+  return requestUsername === username && requestPassword === password
 }
 
 function requireAdmin(request: Request, env: Env) {
-  if (!env.ADMIN_TOKEN) {
-    return json({ message: 'ADMIN_TOKEN is not configured' }, 500)
+  const { password } = getAdminCredentials(env)
+  if (!password) {
+    return json({ message: 'ADMIN_PASSWORD is not configured' }, 500)
   }
 
   if (!isAdminRequest(request, env)) {

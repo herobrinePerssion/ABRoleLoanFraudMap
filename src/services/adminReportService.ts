@@ -1,30 +1,44 @@
 import type { ReportRecord, ReportStatus } from '@/types/report'
 
 const API_BASE = import.meta.env.VITE_REPORT_API_BASE || ''
-const ADMIN_TOKEN_STORAGE_KEY = 'ab-fraud-admin-token'
+const ADMIN_ACCOUNT_STORAGE_KEY = 'ab-fraud-admin-account'
+
+export interface AdminAccount {
+  username: string
+  password: string
+}
 
 function getApiUrl(path: string) {
   return `${API_BASE}${path}`
 }
 
-export function getAdminToken() {
-  return localStorage.getItem(ADMIN_TOKEN_STORAGE_KEY) || ''
+export function getAdminAccount(): AdminAccount {
+  try {
+    const raw = localStorage.getItem(ADMIN_ACCOUNT_STORAGE_KEY)
+    return raw ? JSON.parse(raw) as AdminAccount : { username: 'abRoleAdmin', password: '' }
+  } catch {
+    return { username: 'abRoleAdmin', password: '' }
+  }
 }
 
-export function saveAdminToken(token: string) {
-  localStorage.setItem(ADMIN_TOKEN_STORAGE_KEY, token.trim())
+export function saveAdminAccount(account: AdminAccount) {
+  localStorage.setItem(ADMIN_ACCOUNT_STORAGE_KEY, JSON.stringify({
+    username: account.username.trim(),
+    password: account.password,
+  }))
 }
 
-export function clearAdminToken() {
-  localStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY)
+export function clearAdminAccount() {
+  localStorage.removeItem(ADMIN_ACCOUNT_STORAGE_KEY)
 }
 
-async function adminRequest<T>(path: string, token: string, init?: RequestInit): Promise<T> {
+async function adminRequest<T>(path: string, account: AdminAccount, init?: RequestInit): Promise<T> {
   const response = await fetch(getApiUrl(path), {
     ...init,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
+      'x-admin-username': account.username,
+      'x-admin-password': account.password,
       ...(init?.headers || {}),
     },
   })
@@ -38,7 +52,7 @@ async function adminRequest<T>(path: string, token: string, init?: RequestInit):
 }
 
 export async function getAdminReports(params: {
-  token: string
+  account: AdminAccount
   status?: ReportStatus | ''
   keyword?: string
 }) {
@@ -49,19 +63,19 @@ export async function getAdminReports(params: {
   const query = search.toString()
   return adminRequest<{ items: ReportRecord[] }>(
     `/api/reports/admin${query ? `?${query}` : ''}`,
-    params.token
+    params.account
   )
 }
 
 export async function reviewReport(params: {
-  token: string
+  account: AdminAccount
   id: string
   status: ReportStatus
   feedback?: string
 }) {
   return adminRequest<ReportRecord>(
     `/api/reports/admin/${encodeURIComponent(params.id)}`,
-    params.token,
+    params.account,
     {
       method: 'PATCH',
       body: JSON.stringify({

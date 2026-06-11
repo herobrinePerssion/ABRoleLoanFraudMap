@@ -58,7 +58,6 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
-    ElUpload: typeof import('element-plus/es')['ElUpload']
     EmptyState: typeof import('./components/EmptyState.vue')['default']
     ErrorState: typeof import('./components/ErrorState.vue')['default']
     FilterPanel: typeof import('./components/FilterPanel.vue')['default']
