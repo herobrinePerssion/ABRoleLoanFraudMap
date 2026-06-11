@@ -10,6 +10,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     CommentList: typeof import('./components/CommentList.vue')['default']
     ElAlert: typeof import('element-plus/es')['ElAlert']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBreadcrumb: typeof import('element-plus/es')['ElBreadcrumb']
     ElBreadcrumbItem: typeof import('element-plus/es')['ElBreadcrumbItem']
     ElButton: typeof import('element-plus/es')['ElButton']
@@ -58,6 +59,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElTimeline: typeof import('element-plus/es')['ElTimeline']
     ElTimelineItem: typeof import('element-plus/es')['ElTimelineItem']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     EmptyState: typeof import('./components/EmptyState.vue')['default']
     ErrorState: typeof import('./components/ErrorState.vue')['default']
     FilterPanel: typeof import('./components/FilterPanel.vue')['default']

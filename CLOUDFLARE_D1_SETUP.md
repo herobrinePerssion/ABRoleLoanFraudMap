@@ -27,12 +27,13 @@ pnpm dlx wrangler d1 migrations apply ab-loan-fraud-map --remote
 
 ## 4. Admin account
 
-The project is configured with one administrator account in `wrangler.toml`:
+The project is configured with one administrator username in `wrangler.toml`:
 
 ```text
 username: abRoleAdmin
-password: 391568Zgf,
 ```
+
+The administrator password is stored as the Cloudflare Pages secret `ADMIN_PASSWORD`.
 
 Open the admin page after deployment:
 
@@ -40,7 +41,11 @@ Open the admin page after deployment:
 /admin/reports
 ```
 
-For a public repository, move `ADMIN_PASSWORD` from `wrangler.toml` to a Cloudflare Pages secret before publishing the code.
+To rotate the password later:
+
+```bash
+echo "new-password" | pnpm dlx wrangler pages secret put ADMIN_PASSWORD --project-name abroleloanfraudmap
+```
 
 ## 5. Deploy
 
