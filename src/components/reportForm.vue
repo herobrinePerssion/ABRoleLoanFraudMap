@@ -54,23 +54,6 @@
 
     <el-divider content-position="left">证据与人员信息</el-divider>
 
-    <el-form-item label="公司照片">
-      <el-upload
-        v-model:file-list="fileList"
-        list-type="picture-card"
-        accept="image/*"
-        :auto-upload="false"
-        :limit="6"
-        :on-change="handlePhotoChange"
-        :on-remove="handlePhotoRemove"
-      >
-        <el-icon><Plus /></el-icon>
-        <template #tip>
-          <div class="upload-tip">可选择门头、办公环境、合同、收款码等图片，最多 6 张。</div>
-        </template>
-      </el-upload>
-    </el-form-item>
-
     <el-form-item label="法人姓名">
       <el-input v-model="form.legalPersonName" placeholder="已知则填写法人、负责人或实际控制人姓名" clearable />
     </el-form-item>
